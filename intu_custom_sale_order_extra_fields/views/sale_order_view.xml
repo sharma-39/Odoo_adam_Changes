@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- ===== FORM VIEW ===== -->
+        <record id="view_sale_order_form_extra_fields" model="ir.ui.view">
+            <field name="name">sale.order.form.extra.fields</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Below partner_id (approval workflow fields) -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="x_approved_widget_enable" invisible="1"/>
+                    <field name="x_confirm_enable" invisible="1"/>
+                    <field name="x_approved" invisible="1"/>
+                </xpath>
+
+                <!-- Below payment_term_id -->
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="x_studio_subject"/>
+                    <field name="x_studio_attention_to"/>
+                    <field name="x_studio_po_reference"/>
+                </xpath>
+
+                <!-- Enquiry Reference below partner -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="x_client_ref_id"/>
+                </xpath>
+
+                <!-- Partner Shipping below Enquiry Reference -->
+                <xpath expr="//field[@name='x_client_ref_id']" position="after">
+                    <field name="partner_shipping_id" invisible="0"/>
+                </xpath>
+
+                <!-- Partner Invoice visible -->
+                <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+
+                <!-- VAT Included above Salesperson in Other Info tab -->
+                <xpath expr="//page[@name='other_information']//group[@name='sales_person']//field[@name='user_id']" position="before">
+                    <field name="x_studio_include_vat_in_print"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- ===== TREE/LIST VIEW ===== -->
+        <record id="view_sale_order_tree_custom" model="ir.ui.view">
+            <field name="name">sale.order.tree.custom</field>
+            <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+
+                <!-- Add Subject and Customer columns -->
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="x_studio_subject"/>
+					 <field name="x_studio_approved_status"
+                           widget="badge"
+                           decoration-primary="x_studio_approved_status == 'Approved'"
+                           decoration-danger="x_studio_approved_status == 'Not Approved'"
+                           string="SQ Approval"/>
+                </xpath>
+
+             
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

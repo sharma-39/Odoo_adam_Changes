@@ -1,0 +1,42 @@
+<odoo>
+
+    <!-- Sale Order Form Budget Tab -->
+    <record id="view_order_form_inherit_budget" model="ir.ui.view">
+        <field name="name">sale.order.form.budget</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form//page[@name='customer_signature']" position="after">
+                <page string="Budget Info" name="budget_info_page" groups="sales_team.group_sale_manager">
+                    <group>
+                        <group>
+                            <field name="x_alc_total" string="Total ALC" help="Total Actual Labor Cost"/>
+                            <field name="x_amc_total" string="Total AMC" help="Total Actual Material Cost"/>
+                            <field name="x_studio_amc_alc_total"  help="Total Cost of actual Labor and Material"/>
+                            <field name="x_studio_amc_percentage" help="Calculation Based on Actual Material Cost"/>
+                            <field name="x_studio_set_purchase_budget_valueamt"/>
+                            <field name="x_studio_amc_percentage_total" help="Project Material Budget Share = Purchase budget Ratio + Purchase Budget Value (AMT)"/>
+                        </group>
+                        <group/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+	 <record id="view_order_line_tree_inherit_budget" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.budget</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <!-- Add fields after price_subtotal -->
+            <xpath expr="/form/sheet/notebook/page[@name='order_lines']/field[@name='order_line']/list/field[@name='price_subtotal']" position="after">
+    <field name="x_unit_cost_material" optional="show" readonly="False"/>
+    <field name="x_unit_labour_cost" optional="show" readonly="False"/>
+    <field name="x_studio_material_cost" optional="show"/>
+    <field name="x_studio_labour_cost" optional="show"/>
+    <field name="x_studio_total_cost" optional="show"/>
+  </xpath>
+           
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,39 @@
+<odoo>
+    <record id="view_sale_order_form_inherit_approve" model="ir.ui.view">
+        <field name="name">sale.order.form.approve.button</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <header>
+                <button name="action_approve_order"
+                        string="Approve"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not x_approved"/>
+		
+     
+            </header>
+			<xpath expr="//button[@name='action_confirm']" position="attributes">
+            <attribute name="invisible">True</attribute>
+        </xpath>
+
+        <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+            <attribute name="invisible">not x_approved_widget_enable</attribute>
+        </xpath>
+			 <xpath expr="//sheet" position="inside">
+                <group name="sale_header">
+                    <!-- Hide fields after approval -->
+                    <field name="x_approved_widget_enable" invisible="1"/>
+                    
+                    <!-- Ribbon showing Quote Approved -->
+                    <widget name="web_ribbon" 
+                            title="Quote Approved" 
+                            DE_color="bg-success" 
+                            invisible="x_approved_widget_enable == False and state  in ['draft', 'sent']"/>
+                </group>
+		
+				
+            </xpath>
+        </field>
+    </record>
+</odoo>
