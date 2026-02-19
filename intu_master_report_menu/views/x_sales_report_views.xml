@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- LIST VIEW ONLY -->
+    <record id="view_x_sales_report_list" model="ir.ui.view">
+        <field name="name">x.sales.report.list</field>
+        <field name="model">x_sales_report</field>
+        <field name="arch" type="xml">
+            <list create="true" edit="true" delete="true">
+                <field name="x_name"/>
+                <field name="x_studio_customer_id"/>
+                <field name="x_studio_customer"/>
+                <field name="x_studio_job_order"/>
+                <field name="x_studio_invoice_number"/>
+                <field name="x_studio_invoice_status"/>
+                <field name="x_studio_invoice_value"/>
+                <field name="x_studio_actual_labour_cost"/>
+                <field name="x_studio_actual_total_cost"/>
+                <field name="x_active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_x_sales_report" model="ir.actions.act_window">
+        <field name="name">Master Report Sale</field>
+        <field name="res_model">x_sales_report</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- MENU INSIDE SALES -->
+    <menuitem id="menu_x_sales_report"
+              name="Master Report Sale"
+              parent="sale.sale_menu_root"
+              action="action_x_sales_report"
+              sequence="90"/>
+
+</odoo>

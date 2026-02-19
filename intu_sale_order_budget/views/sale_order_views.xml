@@ -21,22 +21,14 @@
                     </group>
                 </page>
             </xpath>
-        </field>
-    </record>
-	 <record id="view_order_line_tree_inherit_budget" model="ir.ui.view">
-        <field name="name">sale.order.line.tree.budget</field>
-        <field name="model">sale.order.line</field>
-        <field name="inherit_id" ref="sale.view_order_line_tree"/>
-        <field name="arch" type="xml">
-            <!-- Add fields after price_subtotal -->
-            <xpath expr="/form/sheet/notebook/page[@name='order_lines']/field[@name='order_line']/list/field[@name='price_subtotal']" position="after">
+             <xpath expr="//page[@name='order_lines']/field[@name='order_line']/list//field[@name='price_subtotal']" position="after">
     <field name="x_unit_cost_material" optional="show" readonly="False"/>
     <field name="x_unit_labour_cost" optional="show" readonly="False"/>
     <field name="x_studio_material_cost" optional="show"/>
     <field name="x_studio_labour_cost" optional="show"/>
     <field name="x_studio_total_cost" optional="show"/>
   </xpath>
-           
         </field>
     </record>
+
 </odoo>

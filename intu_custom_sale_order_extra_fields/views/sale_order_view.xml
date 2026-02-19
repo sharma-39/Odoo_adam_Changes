@@ -24,18 +24,15 @@
                 </xpath>
 
                 <!-- Enquiry Reference below partner -->
-                <xpath expr="//field[@name='partner_id']" position="after">
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
                     <field name="x_client_ref_id"/>
                 </xpath>
 
                 <!-- Partner Shipping below Enquiry Reference -->
-                <xpath expr="//field[@name='x_client_ref_id']" position="after">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_invoice_id" invisible="0"/>
                     <field name="partner_shipping_id" invisible="0"/>
-                </xpath>
 
-                <!-- Partner Invoice visible -->
-                <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
-                    <attribute name="invisible">0</attribute>
                 </xpath>
 
                 <!-- VAT Included above Salesperson in Other Info tab -->
