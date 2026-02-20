@@ -3,7 +3,7 @@ from odoo import models, fields, api
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    order_reference_number = fields.Char(
+    x_order_reference_number = fields.Char(
         string="Order Reference Number",
         readonly=True,
         copy=False
@@ -18,8 +18,8 @@ class SaleOrder(models.Model):
             vals['name'] = 'New'
 
             # Generate your custom reference
-            if not vals.get('order_reference_number'):
-                vals['order_reference_number'] = self.env[
+            if not vals.get('x_order_reference_number'):
+                vals['x_order_reference_number'] = self.env[
                     'ir.sequence'
                 ].next_by_code('sale.order.normal')
 

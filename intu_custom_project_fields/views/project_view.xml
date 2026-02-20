@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_project_form_inherited" model="ir.ui.view">
+        <field name="name">project.project.form.inherit.custom</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form//field[@name='tag_ids']" position="after">
+                <field name="x_studio_project_invoice_status" widget="progressbar"/>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="x_studio_project_manager"  widget="many2one_avatar" />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Budget" name="budget_delivery">
+                    <group>
+                        <group string="Budget Info">
+                            <field name="x_studio_total_sales_budget"/>
+                            <field name="x_studio_purchase_budget"/>
+                            <field name="x_studio_po_remaining_budget"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
