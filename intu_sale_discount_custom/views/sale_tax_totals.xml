@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Inherit Sale Order Form -->
+    <record id="view_sale_order_form_inherit_discount" model="ir.ui.view">
+        <field name="name">sale.order.form.discount.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add Discount Above Tax Totals -->
+            <xpath expr="//field[@name='tax_totals']" position="before">
+                <field name="x_studio_total_discount"
+                       string="Total Discount"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

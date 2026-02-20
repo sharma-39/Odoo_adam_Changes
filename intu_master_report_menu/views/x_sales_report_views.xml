@@ -9,29 +9,22 @@
 
                 <field name="x_studio_sales_order" width="120"/>
                 <field name="x_studio_customer_id" width="500"/>
-                  <field name="x_studio_invoice_number" width="120"/>
+                <field name="x_studio_invoice_number" width="120"/>
 
                   <field name="x_studio_invoice_value"/>
                 <field name="x_studio_project_value"/>
                 <field name="x_studio_received_payment"/>
 
-                <field name="x_studio_pending_payment"/>
+                <field name="x_studio_pending_payment" width="120"/>
 
                   <field name="x_studio_projects" width="120"/>
                 <field name="x_studio_total_labour_hour" width="120"/>
- <field name="x_studio_actual_labour_cost" width="150"/>
- <field name="x_studio_project_total_materials_cost" width="130"/>
+                 <field name="x_studio_actual_labour_cost" width="150"/>
+                 <field name="x_studio_project_total_materials_cost" width="130"/>
 
                 <field name="x_studio_total_budget"/>
 
                    <field name="x_studio_actual_total_cost" width="120"/>
-
-
-                <field name="x_studio_quote_no"/>
-                <field name="x_studio_job_order"/>
-
-                <field name="x_studio_project_"/>
-
 
                 <field name="x_studio_remaining_budget" width="120" />
                   <field name="x_studio_project_" widget="progressbar" />
@@ -48,13 +41,13 @@
     </record>
 
     <record id="action_x_sales_report" model="ir.actions.act_window">
-        <field name="name">Master Report Sale</field>
+        <field name="name">Master Report</field>
         <field name="res_model">x_sales_report</field>
         <field name="view_mode">list</field>
     </record>
 
     <menuitem id="menu_x_sales_report"
-              name="Master Report Sale"
+              name="Master Report"
               parent="sale.sale_menu_root"
               action="action_x_sales_report"
               sequence="90"/>

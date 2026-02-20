@@ -29,7 +29,7 @@
                     <widget name="web_ribbon" 
                             title="Quote Approved" 
                             DE_color="bg-success" 
-                            invisible="x_approved_widget_enable == False and state  in ['draft', 'sent']"/>
+                            invisible="x_approved_widget_enable == False and state  in ['draft', 'sent','cancel']"/>
                     <widget name="web_ribbon" title="Job Order" DE_color="bg-success" invisible="state !='sale'"/>
                 </group>
 		

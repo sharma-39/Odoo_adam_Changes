@@ -45,6 +45,7 @@ class XSalesReport(models.Model):
 
     x_studio_job_order = fields.Char(string="Job Order")
 
+
     x_studio_project_ = fields.Float(
         string="Project %",
         compute="_compute_project_percentage",

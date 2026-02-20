@@ -9,8 +9,6 @@ class SaleOrder(models.Model):
         for record in self:
             record.write({
                 'x_approved': False,
-                'x_client_approved': False,
-                'x_client_approved_widget_enable': False,
                 'x_approved_widget_enable': False,
                 'x_confirm_enable': False,
                 'x_studio_approved_status': 'Not Approved'

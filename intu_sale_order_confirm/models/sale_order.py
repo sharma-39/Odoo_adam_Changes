@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
         for record in self:
 
             # Assign SO sequence only if confirming
-            if record.state == 'sale' and record.name in ('New', False):
+            if record.name in ('New', False):
                 next_so = self.env['ir.sequence'].next_by_code('sale.order.custom')
                 record.name = next_so
 
@@ -57,7 +57,6 @@ class SaleOrder(models.Model):
                 'x_studio_sales_order': record.id,
                 'x_studio_customer_id': record.partner_id.id,
                 'x_studio_project_value': record.amount_total,
-                'x_studio_projects': record.project_id.id if record.project_id else False,
             }
 
             if sales_report:
