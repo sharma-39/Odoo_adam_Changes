@@ -1,5 +1,5 @@
 {
-    'name': 'Sale Order Line Control',
+    'name': 'Sale Order Line Domain Control',
     'version': '1.0',
     'summary': 'Control order_line based on Sale Order state',
     'author': 'Your Name',

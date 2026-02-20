@@ -5,29 +5,29 @@
         <field name="name">x.sales.report.list</field>
         <field name="model">x_sales_report</field>
         <field name="arch" type="xml">
-            <list create="true" edit="true" delete="true">
+            <list create="false" edit="false" delete="false">
 
                 <field name="x_studio_sales_order" width="120"/>
                 <field name="x_studio_customer_id" width="250"/>
                 <field name="x_studio_invoice_number" width="120" class="text-wrap"/>
 
-                  <field name="x_studio_invoice_value"/>
+                <field name="x_studio_invoice_value"/>
                 <field name="x_studio_project_value"/>
                 <field name="x_studio_received_payment"/>
 
                 <field name="x_studio_pending_payment" width="120"/>
 
-                  <field name="x_studio_projects" width="250" />
+                <field name="x_studio_projects" width="220" />
                 <field name="x_studio_total_labour_hour" width="120"/>
-                 <field name="x_studio_actual_labour_cost" width="150"/>
-                 <field name="x_studio_project_total_materials_cost" width="130"/>
+                <field name="x_studio_actual_labour_cost" width="150"/>
+                <field name="x_studio_project_total_materials_cost" width="130"/>
 
                 <field name="x_studio_total_budget"/>
 
-                   <field name="x_studio_actual_total_cost" width="120"/>
+                <field name="x_studio_actual_total_cost" width="120"/>
 
                 <field name="x_studio_remaining_budget" width="120" />
-                  <field name="x_studio_project_" widget="progressbar" />
+                <field name="x_studio_project_" widget="progressbar" />
 
                 <field name="x_studio_invoice_status"  widget="badge" decoration-primary="x_studio_invoice_status == 'not_received'" decoration-info="x_studio_invoice_status == 'partial'" decoration-success="x_studio_invoice_status == 'fully'" width="150" string="Invoice Payment Status"/>
 

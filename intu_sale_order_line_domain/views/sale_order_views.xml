@@ -5,24 +5,23 @@
     <field name="inherit_id" ref="sale.view_order_form"/>
     <field name="arch" type="xml">
 
-          <xpath expr="//field[@name='order_line']" position="attributes">
-                <attribute name="readonly">state == 'sale'</attribute>
-            </xpath>
+     <xpath expr="//field[@name='order_line']/list/control/create[@name='add_product_control']" position="attributes">
+         <attribute name="invisible">parent.state in ['sale', 'done']</attribute>
+     </xpath>
+     <xpath expr="//field[@name='order_line']/list/control/create[@name='add_section_control']" position="attributes">
+         <attribute name="invisible">parent.state in ['sale', 'done']</attribute>
+     </xpath>
+     <xpath expr="//field[@name='order_line']/list/control/create[@name='add_note_control']" position="attributes">
+         <attribute name="invisible">parent.state in ['sale', 'done']</attribute>
+     </xpath>
 
-        <xpath expr="//field[@name='order_line']/list//field[@name='product_id']" position="attributes">
-            <attribute name="readonly">state == 'sale'</attribute>
-            <attribute name="force_save">1</attribute>
-        </xpath>
+     <xpath expr="//field[@name='order_line']/list/control/create[@name='add_note_control']" position="attributes">
+         <attribute name="invisible">parent.state in ['sale', 'done']</attribute>
+     </xpath>
+      <xpath expr="//field[@name='order_line']/list/control/button[@name='action_add_from_catalog']" position="attributes">
+         <attribute name="invisible">1</attribute>
+     </xpath>
 
-        <xpath expr="//field[@name='order_line']/list//field[@name='product_uom_qty']" position="attributes">
-            <attribute name="readonly">parent.state == 'sale'</attribute>
-            <attribute name="force_save">1</attribute>
-        </xpath>
-
-        <xpath expr="//field[@name='order_line']/list//field[@name='price_unit']" position="attributes">
-            <attribute name="readonly">0</attribute>
-            <attribute name="force_save">1</attribute>
-        </xpath>
 
     </field>
 </record>
