@@ -8,8 +8,8 @@
             <list create="true" edit="true" delete="true">
 
                 <field name="x_studio_sales_order" width="120"/>
-                <field name="x_studio_customer_id" width="500"/>
-                <field name="x_studio_invoice_number" width="120"/>
+                <field name="x_studio_customer_id" width="250"/>
+                <field name="x_studio_invoice_number" width="120" class="text-wrap"/>
 
                   <field name="x_studio_invoice_value"/>
                 <field name="x_studio_project_value"/>
@@ -17,7 +17,7 @@
 
                 <field name="x_studio_pending_payment" width="120"/>
 
-                  <field name="x_studio_projects" width="120"/>
+                  <field name="x_studio_projects" width="250" />
                 <field name="x_studio_total_labour_hour" width="120"/>
                  <field name="x_studio_actual_labour_cost" width="150"/>
                  <field name="x_studio_project_total_materials_cost" width="130"/>

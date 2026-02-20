@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-
+import time
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -8,7 +8,6 @@ class SaleOrder(models.Model):
 
 
     def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
 
         for record in self:
 
@@ -46,6 +45,7 @@ class SaleOrder(models.Model):
 
                 record.x_product_created = True
             record.x_confirm_enable= False
+            time.sleep(3)
             # Search existing report for this Sale Order
             sales_report = self.env['x_sales_report'].search([
                 ('x_studio_sales_order', '=', record.id)
@@ -66,4 +66,5 @@ class SaleOrder(models.Model):
                 # Create new record
                 self.env['x_sales_report'].create(values)
 
+        res = super(SaleOrder, self).action_confirm()
         return res
