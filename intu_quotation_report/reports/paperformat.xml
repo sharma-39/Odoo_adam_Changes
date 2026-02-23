@@ -33,7 +33,7 @@
     <record id="action_report_custom_quotation"
             model="ir.actions.report">
 
-        <field name="name">Client Quote Report</field>
+        <field name="name">Quotation</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
 

@@ -30,24 +30,24 @@
     <!-- 3️⃣ REPORT ACTION -->
     <!-- ===================================================== -->
 
-    <record id="action_report_custom_job_order"
+    <record id="action_report_custom_lumpsum"
             model="ir.actions.report">
 
-        <field name="name">Job Order</field>
+        <field name="name">Lumpsum</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
 
         <!-- Important: module_name.template_id -->
-        <field name="report_name">intu_job_order_report.job_quotation_report</field>
-        <field name="report_file">intu_job_order_report.job_quotation_report</field>
+        <field name="report_name">intu_lumpsum_order_report.job_quotation_report</field>
+        <field name="report_file">intu_lumpsum_order_report.job_quotation_report</field>
 
         <!-- Attach Paper Format -->
         <field name="paperformat_id"
-               ref="intu_job_order_report.paperformat_quotation"/>
+               ref="intu_lumpsum_order_report.paperformat_quotation"/>
 
         <!-- Dynamic File Name -->
         <field name="print_report_name">
-            'Job Order  - %s' % object.display_name
+            'Lumpsum - %s' % object.display_name
         </field>
 
         <!-- Add to Print Menu -->
