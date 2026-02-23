@@ -1,0 +1,85 @@
+<odoo>
+    <record id="view_mrp_bom_form_inherit_custom" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit.custom</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+
+
+             <xpath expr="/form//page[@name='miscellaneous']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+             <xpath expr="/form//page[@name='operations']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+          <xpath expr="//field[@name='product_qty']" position="attributes">
+    <attribute name="nolabel">1</attribute><attribute name="invisible">1</attribute>
+</xpath>
+           <xpath expr="//field[@name='code']" position="replace">
+               <field name="code" invisible="1"/>
+           </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+               <attribute name="invisible">1</attribute>
+           </xpath>
+            <xpath expr="//field[@name='product_id']" position="replace">
+               <field name="product_id" invisible="1"/>
+           </xpath>
+            <xpath expr="//field[@name='type']" position="replace">
+               <field name="type" invisible="1"/>
+           </xpath>
+
+              <xpath expr="//field[@name='product_uom_id']" position="replace">
+               <field name="product_uom_id" invisible="1"/>
+           </xpath>
+              <xpath expr="//field[@name='product_qty']" position="replace">
+               <field name="product_qty" invisible="1"/>
+           </xpath>
+
+
+              <xpath expr="/form/sheet/group/group/field[@name='product_tmpl_id']" position="attributes">
+
+    <attribute name="domain">["&amp;", "&amp;", ("categ_id.x_studio_bom_list", "=", True), ("x_studio_is_project_done", "=", False), ("x_studio_is_create_job_order", "=", False)]</attribute>
+  </xpath>
+            <!-- Change Label of product_tmpl_id -->
+           <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
+
+    <attribute name="string">Job Order</attribute>
+</xpath>
+
+            <!-- Move code field below product_tmpl_id -->
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="code"/>
+            </xpath>
+
+            <!-- Move project_id below code -->
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="project_id"/>
+            </xpath>
+
+
+             <xpath expr="/form/sheet" position="before">
+                <header>
+                    <button name="action_approve_bom"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        invisible="x_studio_approve_enable"></button>
+                    <button name="action_revise_bom"
+                        type="object"
+                        string="Revise"
+                        class="oe_highlight"
+                        invisible="not x_studio_approve_enable"></button>
+                    <button name="action_create_mr_bom"
+                        type="object"
+                        string="Create MR"
+                        class="oe_highlight"
+                        invisible="not x_studio_approve_enable"></button>
+                    <field name="x_status_bar" widget="statusbar" statusbar_visible="draft,approve"/>
+                </header>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

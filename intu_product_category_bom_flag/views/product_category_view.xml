@@ -1,0 +1,14 @@
+<odoo>
+    <record id="view_product_category_form_inherit_bom_flag" model="ir.ui.view">
+        <field name="name">product.category.form.inherit.bom.flag</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="x_studio_bom_list"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
