@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- 1️⃣ PAPER FORMAT -->
+    <!-- ===================================================== -->
+
+    <record id="paperformat_quotation"
+            model="report.paperformat">
+
+        <field name="name">Client Quote A4 Portrait</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">40</field>
+
+        <field name="disable_shrinking" eval="True"/>
+        <field name="dpi">90</field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- 3️⃣ REPORT ACTION -->
+    <!-- ===================================================== -->
+
+    <record id="action_report_custom_quotation"
+            model="ir.actions.report">
+
+        <field name="name">Job Order</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+
+        <!-- Important: module_name.template_id -->
+        <field name="report_name">intu_job_order_report.job_quotation_report</field>
+        <field name="report_file">intu_job_order_report.job_quotation_report</field>
+
+        <!-- Attach Paper Format -->
+        <field name="paperformat_id"
+               ref="intu_job_order_report.paperformat_quotation"/>
+
+        <!-- Dynamic File Name -->
+        <field name="print_report_name">
+            'Job Order  - %s' % object.display_name
+        </field>
+
+        <!-- Add to Print Menu -->
+        <field name="binding_model_id"
+               ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+
+    </record>
+
+</odoo>
