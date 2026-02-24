@@ -7,61 +7,68 @@
         <field name="arch" type="xml">
             <form string="Material Request">
 
+                <!-- HEADER -->
+                <header>
+
+
+                    <button name="action_create_rfq_bom"
+                            type="object"
+                            string="Create RFQ"
+                            class="oe_highlight"/>
+
+                    <button name="action_create_delivery_bom"
+                            type="object"
+                            string="Create Delivery"
+                            class="oe_highlight"
+                            invisible="1"/>
+
+                    <field name="x_studio_selection_field_5i4_1j9oojl26"
+                           widget="statusbar"
+                           statusbar_visible="requested,partially_delivered,delivered"/>
+
+                </header>
+
                 <sheet>
+                    <div name="button_box" class="oe_button_box">
 
-                   <xpath expr="/form/sheet" position="before">
-                        <div name="button_box" class="oe_button_box">
+                        <button icon="fa-truck"
+                                type="action"
+                                name="1038"
+                                class="oe_stat_button"
+                                invisible="x_studio_delivery_count &lt; 1">
 
-                <!-- Delivery Button -->
-                <button icon="fa-truck"
-                        type="action"
-                        name="1038"
-                        class="oe_stat_button"
-                        invisible="x_studio_delivery_count &lt; 1">
+                            <field name="x_studio_delivery_count"
+                                   widget="statinfo"
+                                   string="Delivery Order"
+                                   readonly="1"/>
+                        </button>
 
-                    <field name="x_studio_delivery_count"
-                           widget="statinfo"
-                           string="Delivery Order"
-                           readonly="1"/>
-                </button>
+                        <button icon="fa-edit"
+                                type="action"
+                                name="1123"
+                                class="oe_stat_button"
+                                invisible="x_studio_delivery_count &lt; 1"/>
 
-                <!-- Edit Button -->
-                <button icon="fa-edit"
-                        type="action"
-                        name="1123"
-                        class="oe_stat_button"
-                        invisible="x_studio_delivery_count &lt; 1"/>
-            </div>
-            <header>
-
-                  <button name="action_create_rfq_bom"
-                        type="object"
-                        string="Create RFQ"
-                        class="oe_highlight"></button>
-                  <button name="action_create_delivery_bom"
-                        type="object"
-                        string="Create Delivery"
-                        class="oe_highlight" invisible="1"></button>
- <field name="x_studio_selection_field_5i4_1j9oojl26"
-                       widget="statusbar"
-                       statusbar_visible="requested,partially_delivered,delivered"/>
-            </header>
-        </xpath>
-                <group>
+                    </div>
+                    <!-- MAIN FIELDS -->
+                    <group>
                         <group>
-                              <field name="x_name"/>
-                              <field name="x_studio_mr_number"/>
-                              <field name="x_studio_sale_order_number"/>
-                              <field name="x_studio_project"/>
-                              <field name="x_studio_mr_priority" widget="priority"/>
+                            <field name="x_name"/>
+                            <field name="x_studio_mr_number"/>
+                            <field name="x_studio_sale_order_number"/>
+                            <field name="x_studio_project"/>
+                            <field name="x_studio_mr_priority" widget="priority"/>
                         </group>
+
                         <group>
                             <field name="x_studio_mr_date"/>
                             <field name="create_uid" readonly="1"/>
                             <field name="x_studio_expected_deadline"/>
                         </group>
                     </group>
-                   <notebook>
+
+                    <!-- NOTEBOOK -->
+                    <notebook>
                         <page string="Material Lines">
                             <field name="x_custom_form_line_ids">
                                 <list editable="bottom">
@@ -72,50 +79,35 @@
                                     <field name="x_studio_received_qty"/>
                                     <field name="x_studio_po_rfq_qty"/>
                                     <field name="x_studio_expected_deadline"/>
-                                    <field name="x_studio_unit" domain="[('id', 'in', x_studio_allowed_uom)]"/>
+                                    <field name="x_studio_unit"
+                                           domain="[('id', 'in', x_studio_allowed_uom)]"/>
                                 </list>
                             </field>
                         </page>
                     </notebook>
+
                 </sheet>
 
-                <!-- Chatter -->
                 <chatter/>
+
             </form>
+
         </field>
     </record>
+    <record id="view_material_request_list" model="ir.ui.view"> <field name="name">material.request.list</field> <field name="model">x_custom_form</field> <field name="arch" type="xml"> <list> <field name="x_studio_mr_number"/> <field name="x_studio_sale_order_number"/> <field name="x_studio_mr_date"/> <field name="x_studio_expected_deadline"/> <field name="x_studio_selection_field_5i4_1j9oojl26" optional="show" string="Purchase Status" decoration-info="x_studio_selection_field_5i4_1j9oojl26 == 'requested'" decoration-primary="x_studio_selection_field_5i4_1j9oojl26 == 'partially_delivered'" decoration-success="x_studio_selection_field_5i4_1j9oojl26 == 'delivered'" widget="badge" required="False"/> <field name="x_studio_delivery_number"/> <field name="x_studio_purchase_count"/> </list> </field> </record>
+    <record id="action_material_request" model="ir.actions.act_window"> <field name="name">Material Request</field> <field name="res_model">x_custom_form</field> <field name="view_mode">list,form</field> </record>
+  <menuitem id="menu_project_hub_root"
+          name="Project Hub"
+          parent="project.menu_main_pm"
+          sequence="30"/>
+    <menuitem id="menu_project_sub"
+          name="Project"
+          parent="menu_project_hub_root"
+          sequence="1"/>
 
-    <!-- list View -->
-    <record id="view_material_request_list" model="ir.ui.view">
-        <field name="name">material.request.list</field>
-        <field name="model">x_custom_form</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="x_studio_mr_number"/>
-                <field name="x_studio_sale_order_number"/>
-                 <field name="x_studio_mr_date"/>
-                 <field name="x_studio_expected_deadline"/>
-                <field name="x_studio_selection_field_5i4_1j9oojl26" optional="show" string="Purchase Status" decoration-info="x_studio_selection_field_5i4_1j9oojl26 == 'requested'" decoration-primary="x_studio_selection_field_5i4_1j9oojl26 == 'partially_delivered'" decoration-success="x_studio_selection_field_5i4_1j9oojl26 == 'delivered'" widget="badge" required="False"/>
-                <field name="x_studio_delivery_number"/>
-                <field name="x_studio_purchase_count"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- Action -->
-    <record id="action_material_request" model="ir.actions.act_window">
-        <field name="name">Material Request</field>
-        <field name="res_model">x_custom_form</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <!-- Menu -->
-    <menuitem id="menu_material_request_root"
-              name="Material Request"/>
-
-    <menuitem id="menu_material_request"
-              name="Material Requests"
-              parent="menu_material_request_root"
-              action="action_material_request"/>
-
+<menuitem id="menu_material_request"
+          name="Material Requests"
+          parent="menu_project_hub_root"
+          action="action_material_request"
+          sequence="1"/>
 </odoo>
