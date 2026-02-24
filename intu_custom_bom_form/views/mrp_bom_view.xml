@@ -82,4 +82,22 @@
 
         </field>
     </record>
+
+    <record id="view_mrp_bom_form_inherit_lines" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit.lines</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="attributes">
+                <attribute name="readonly">not parent.x_studio_approve_enable</attribute>
+            </xpath>
+            <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="after">
+
+                <field name="x_studio_mr_qty" readonly="1"/>
+                <field name="x_studio_remarks"/>
+            </xpath>
+
+        </field>
+    </record>
+
 </odoo>

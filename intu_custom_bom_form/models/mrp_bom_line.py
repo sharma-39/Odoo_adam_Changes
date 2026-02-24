@@ -1,8 +1,21 @@
-from odoo import models, api, _
+from odoo import models, api, _,fields
 from odoo.exceptions import UserError
 
 class MrpBomLine(models.Model):
     _inherit = 'mrp.bom.line'
+
+    x_studio_mr_qty = fields.Float(
+        string="MR Qty"
+    )
+
+    x_studio_remarks = fields.Char(
+        string="Remarks"
+    )
+
+    x_studio_unit = fields.Many2one(
+        'uom.uom',
+        string="Unit"
+    )
 
     @api.onchange('product_id')
     def _onchange_product_id_check_duplicate(self):

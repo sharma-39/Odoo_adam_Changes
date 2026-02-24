@@ -1,0 +1,85 @@
+<odoo>
+
+    <!-- List View -->
+    <record id="view_x_wizard_form_list" model="ir.ui.view">
+        <field name="name">x.wizard.form.list</field>
+        <field name="model">x.wizard.form</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="x_name"/>
+                <field name="x_studio_expected_deadline"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_x_wizard_form_form" model="ir.ui.view">
+        <field name="name">x.wizard.form.form</field>
+        <field name="model">x.wizard.form</field>
+        <field name="arch" type="xml">
+            <form string="Wizard Form">
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="x_name"/>
+                        </group>
+                        <group>
+                            <field name="x_studio_expected_deadline"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Lines">
+                            <field name="x_wizard_form_line_ids">
+
+                                <!-- One2many List (NOT tree) -->
+                                <list editable="bottom">
+                                    <field name="x_studio_sequence" widget="handle"/>
+                                    <field name="x_studio_many2one_field_4a2_1j8lb2oqp" invsiable="1"></field>
+                                    <field name="x_studio_product"/>
+                                    <field name="x_studio_qty"/>
+                                    <field name="x_studio_unit"/>
+                                    <field name="x_studio_mr_qty" required="x_studio_mr_qty == 0"/>
+                                    <field name="x_studio_remarks"/>
+                                    <field name="x_studio_expected_deadline"/>
+
+                                </list>
+
+                                <form>
+                                    <group>
+                                        <field name="x_studio_sequence"/>
+                                        <field name="x_studio_many2one_field_4a2_1j8lb2oqp" invisible="1"></field>
+                                        <field name="x_studio_product"/>
+                                        <field name="x_studio_qty"/>
+                                        <field name="x_studio_unit"/>
+                                        <field name="x_studio_mr_qty"/>
+                                        <field name="x_studio_remarks"/>
+                                        <field name="x_studio_expected_deadline"/>
+                                    </group>
+                                </form>
+
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_x_wizard_form" model="ir.actions.act_window">
+        <field name="name">Wizard Forms</field>
+        <field name="res_model">x.wizard.form</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_x_wizard_form_root" name="Custom Wizard"/>
+    <menuitem id="menu_x_wizard_form"
+              name="Wizard Forms"
+              parent="menu_x_wizard_form_root"
+              action="action_x_wizard_form"/>
+
+</odoo>

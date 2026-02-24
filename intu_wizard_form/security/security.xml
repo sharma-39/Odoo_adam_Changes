@@ -1,0 +1,6 @@
+<odoo>
+    <record id="group_wizard_form_user" model="res.groups">
+        <field name="name">Wizard Form User</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+</odoo>

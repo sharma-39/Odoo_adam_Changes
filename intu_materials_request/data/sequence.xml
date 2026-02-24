@@ -1,0 +1,20 @@
+<odoo>
+
+    <record id="seq_material_request" model="ir.sequence">
+        <field name="name">Material Request</field>
+        <field name="code">material.request.no</field>
+
+        <!-- Prefix -->
+        <field name="prefix">MR|%(year)s|</field>
+
+        <!-- Padding (Sequence Size = 6) -->
+        <field name="padding">6</field>
+
+        <!-- Increment -->
+        <field name="number_increment">1</field>
+
+        <!-- Use Date Range (Optional: set True if needed) -->
+        <field name="use_date_range">True</field>
+    </record>
+
+</odoo>
