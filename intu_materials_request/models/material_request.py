@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 from odoo.exceptions import UserError
 
 
@@ -34,7 +34,7 @@ class MaterialRequest(models.Model):
 
     x_studio_rfq_enable = fields.Boolean(string="RFQ Enable")
 
-    x_studio_delivery_count = fields.Float(
+    x_studio_delivery_count = fields.Integer(
         string="Delivery Count",
         compute="_compute_delivery_count",
         copy=True
@@ -46,7 +46,11 @@ class MaterialRequest(models.Model):
 
     x_studio_expected_deadline = fields.Datetime(string="Expected Deadline")
 
-    x_studio_purchase_count = fields.Integer(string="RFQ | PO")
+    x_studio_purchase_count = fields.Integer(
+        string="RFQ | PO",
+        compute="_compute_purchase_count",
+        copy=True
+    )
 
     x_studio_delivery_number = fields.Char(string="Delivery Number")
 
@@ -61,6 +65,20 @@ class MaterialRequest(models.Model):
         'material_request_id',
         string="Material Request Lines"
     )
+
+    @api.depends('x_studio_mr_number')
+    def _compute_purchase_count(self):
+
+        for record in self:
+            if not record.x_studio_mr_number:
+                record.x_studio_purchase_count = 0
+                continue
+
+            purchase_count = self.env['purchase.order'].search_count([
+                ('x_studio_mr_number', '=', record.x_studio_mr_number)
+            ])
+
+            record.x_studio_purchase_count = purchase_count
 
     @api.depends('x_studio_mr_number')
     def _compute_delivery_count(self):
@@ -170,10 +188,158 @@ class MaterialRequest(models.Model):
             record.message_post(body=f"Delivery Order {picking.name} was created.")
 
 
+
     def action_create_rfq_bom(self):
-        return
+        self.ensure_one()
 
+        lines = []
 
+        # -------------------------------------------------
+        # Prepare Wizard Lines
+        # -------------------------------------------------
+        for line in self.x_custom_form_line_ids:
+
+            product = line.x_studio_product
+
+            mr_qty = line.x_studio_qty or 0.0
+            delivered_qty = line.x_studio_received_qty or 0.0
+            waiting_po_qty = line.x_studio_waiting_po_qty or 0.0
+            received_po_qty = line.x_studio_received_po_qty or 0.0
+
+            rfq_qty = max(
+                mr_qty - delivered_qty - received_po_qty - waiting_po_qty,
+                0.0
+            )
+
+            if rfq_qty <= 0:
+                continue
+
+            qty_on_hand = product.qty_available if product else 0.0
+
+            vendor_id = False
+            if product and product.seller_ids:
+                vendor_id = product.seller_ids[0].partner_id.id
+
+            lines.append((0, 0, {
+                'x_studio_sequence': line.x_studio_sequence,
+                'x_studio_mr_name': product.id if product else False,
+                'x_studio_qty': rfq_qty,
+                'x_studio_unit': line.x_studio_unit.id if line.x_studio_unit else False,
+                'x_studio_qty_on_hand': qty_on_hand,
+                'x_studio_rfq_qty': 0.0,
+                'x_name': line.x_studio_remarks_1,
+                'x_studio_vendor_1': vendor_id,
+            }))
+
+        if not lines:
+            raise UserError(_(
+                "No pending quantities available.\n"
+                "All required quantities are already delivered "
+                "or covered by existing PO."
+            ))
+
+        # -------------------------------------------------
+        # Open Wizard WITHOUT create()
+        # -------------------------------------------------
+        return {
+            'name': _('Create RFQ Request'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'x_mr_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_x_studio_flow': "create",
+                'default_x_studio_job_order_no': self.x_studio_sale_order_number.id if self.x_studio_sale_order_number else False,
+                'default_x_studio_mr_number': self.x_studio_mr_number,
+                'default_x_studio_dr_number': self.x_studio_delivery_number,
+                'default_x_studio_project': self.x_studio_project.id if self.x_studio_project else False,
+                'default_x_studio_responsibility': self.env.uid,
+                'default_x_mr_wizard_line_ids_e1f04': lines,
+            }
+        }
+
+    def goto_delivery_form(self):
+        # 'self' represents the current record(s)
+        self.ensure_one()  # Safety check: ensure we are only clicking from one record
+
+        mr_number = self.x_studio_mr_number
+
+        if not mr_number:
+            raise UserError("The MR Number is missing. Cannot find related transfers.")
+
+        # Search for the pickings (Transfers)
+        pickings = self.env['stock.picking'].search([
+            ('x_studio_mr_request_number', '=', mr_number),
+            ('picking_type_code', '=', 'outgoing')
+        ])
+
+        if not pickings:
+            raise UserError(f"No Stock Picking (Transfer) found for MR: {mr_number}")
+
+        # Prepare the window action
+        action = {
+            'name': 'Delivery Orders',
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'target': 'current',
+        }
+
+        if len(pickings) == 1:
+            # One record: Open the form view directly
+            action.update({
+                'view_mode': 'list',
+                'res_id': pickings.id,
+            })
+        else:
+            # Multiple records: Open the list (tree) view filtered by IDs
+            action.update({
+                'view_mode': 'list',
+                'domain': [('id', 'in', pickings.ids)],
+            })
+
+        return action
+
+    def goto_rfq_form(self):
+        self.ensure_one()
+
+        mr_number = self.x_studio_mr_number
+
+        if not mr_number:
+            raise UserError(_("MR Number is not defined."))
+
+        purchases = self.env['purchase.order'].search([
+            ('x_studio_mr_number', '=', mr_number)
+        ])
+
+        if not purchases:
+            raise UserError(
+                _("No Purchase Order found for MR: %s") % mr_number
+            )
+
+        # -------------------------------------------------
+        # Single PO → Open Form
+        # -------------------------------------------------
+        if len(purchases) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Purchase Order'),
+                'res_model': 'purchase.order',
+                'view_mode': 'form',
+                'res_id': purchases.id,
+                'target': 'current',
+            }
+
+        # -------------------------------------------------
+        # Multiple POs → Open List
+        # -------------------------------------------------
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Purchase Orders'),
+            'res_model': 'purchase.order',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', purchases.ids)],
+            'target': 'current',
+        }
 
 # ==============================
 # MATERIAL REQUEST LINE

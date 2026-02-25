@@ -34,11 +34,11 @@
                             <field name="x_wizard_form_line_ids">
 
                                 <!-- One2many List (NOT tree) -->
-                                <list editable="bottom">
+                                <list editable="bottom" create="false">
                                     <field name="x_studio_sequence" widget="handle"/>
                                     <field name="x_studio_many2one_field_4a2_1j8lb2oqp" invsiable="1"></field>
                                     <field name="x_studio_product"/>
-                                    <field name="x_studio_qty"/>
+                                    <field name="x_studio_qty" readonly="1"/>
                                     <field name="x_studio_unit"/>
                                     <field name="x_studio_mr_qty" required="x_studio_mr_qty == 0"/>
                                     <field name="x_studio_remarks"/>

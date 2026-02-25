@@ -1,0 +1,45 @@
+<odoo>
+
+    <record id="view_purchase_order_form_inherit_custom_position" model="ir.ui.view">
+        <field name="name">purchase.order.form.custom.position</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- 1️⃣ Move Partner Before RFQ Number -->
+
+             <xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="before">
+                    <field name="x_studio_rfq_number"/>
+            </xpath>
+
+            <!-- 2️⃣ Move Vendor Reference Below Project -->
+            <xpath expr="/form/sheet/group/group/field[@name='partner_ref']" position="after">
+                <field name="project_id"/>
+                <field name="x_studio_responsibility"/>
+            </xpath>
+
+            <!-- 3️⃣ Origin Before Purchase Type -->
+            <xpath expr="//field[@name='date_order']" position="before">
+                <field name="x_studio_purchase_type"></field>
+                 <field name="origin"/>
+                 <field name="x_studio_mr_number"/>
+            </xpath>
+
+            <xpath expr="//div[@name='reminder']" position="attributes">
+    <attribute name="invisible">True</attribute>
+</xpath>
+
+<xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
+    <attribute name="invisible">True</attribute>
+</xpath>
+
+            <!-- 4️⃣ MR Number After Purchase Type -->
+
+              <xpath expr="//field[@name='order_line']/list/field[@name='tax_ids']" position="after">
+                <field name="x_studio_remarks"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

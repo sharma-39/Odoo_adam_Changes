@@ -5,37 +5,19 @@
         <field name="arch" type="xml">
             <form string="Material Request">
                 <header>
-                    <button name="action_create_rfq_bom"
-                            type="object"
-                            string="Create RFQ"
-                            class="oe_highlight"/>
-
-                    <button name="action_create_delivery_bom"
-                            type="object"
-                            string="Create Delivery"
-                            class="oe_highlight"
-                            invisible="1"/>
-
-                    <field name="x_studio_selection_field_5i4_1j9oojl26"
-                           widget="statusbar"
-                           statusbar_visible="requested,partially_delivered,delivered"/>
+                    <button name="action_create_rfq_bom" type="object" string="Create RFQ" class="oe_highlight"/>
+                    <button name="action_create_delivery_bom" type="object" string="Create Delivery" class="oe_highlight" invisible="1"/>
+                    <field name="x_studio_selection_field_5i4_1j9oojl26" widget="statusbar" statusbar_visible="requested,partially_delivered,delivered"/>
                 </header>
 
                 <sheet>
                     <div name="button_box" class="oe_button_box">
-                        <button icon="fa-truck"
-                                type="action"
-                                name="%(stock.action_picking_tree_all)d"
-                                class="oe_stat_button"
-                                invisible="x_studio_delivery_count == 0">
-                            <field name="x_studio_delivery_count" widget="statinfo" string="Delivery Order"/>
+                        <button name="goto_delivery_form" type="object" class="oe_stat_button" icon="fa-truck" invisible="x_studio_delivery_count == 0">
+                            <field name="x_studio_delivery_count" widget="statinfo" string="Delivery Order" options="{'format': false}"/>
                         </button>
-
-                        <button icon="fa-edit"
-                                type="action"
-                                name="%(stock.action_picking_form)d"
-                                class="oe_stat_button"
-                                invisible="x_studio_delivery_count == 0"/>
+                         <button name="goto_rfq_form" type="object" class="oe_stat_button" icon="fa-edit" invisible="x_studio_purchase_count == 0">
+                            <field name="x_studio_purchase_count" widget="statinfo" string="RFQ | PO" options="{'format': false}"/>
+                        </button>
                     </div>
 
                     <group>
@@ -64,18 +46,14 @@
                                     <field name="x_studio_received_qty"/>
                                     <field name="x_studio_po_rfq_qty"/>
                                     <field name="x_studio_expected_deadline"/>
-                                    <field name="x_studio_unit"/>
+                                    <field name="x_studio_unit" domain="[('id', 'in', x_studio_allowed_uom)]"/>
                                 </list>
                             </field>
                         </page>
                     </notebook>
                 </sheet>
 
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
+                  <chatter></chatter>
             </form>
         </field>
     </record>
@@ -89,10 +67,7 @@
                 <field name="x_studio_sale_order_number"/>
                 <field name="x_studio_mr_date"/>
                 <field name="x_studio_expected_deadline"/>
-                <field name="x_studio_selection_field_5i4_1j9oojl26"
-                       widget="badge"
-                       decoration-info="x_studio_selection_field_5i4_1j9oojl26 == 'requested'"
-                       decoration-success="x_studio_selection_field_5i4_1j9oojl26 == 'delivered'"/>
+                <field name="x_studio_selection_field_5i4_1j9oojl26" string="Purchase Status" widget="badge" decoration-info="x_studio_selection_field_5i4_1j9oojl26 == 'requested'" decoration-warning="x_studio_selection_field_5i4_1j9oojl26 == 'partially_delivered'" decoration-success="x_studio_selection_field_5i4_1j9oojl26 == 'delivered'"/>
                 <field name="x_studio_delivery_number"/>
                 <field name="x_studio_purchase_count"/>
             </list>
@@ -104,21 +79,15 @@
         <field name="res_model">x_custom_form</field>
         <field name="view_mode">list,form</field>
     </record>
-
-    <menuitem id="menu_project_hub_root"
+     <menuitem id="menu_project_hub_root"
               name="Project Hub"
               parent="project.menu_main_pm"
               sequence="40"/>
 
-    <menuitem id="menu_project_sub"
-              name="Project"
-              parent="menu_project_hub_root"
-              sequence="10"/>
 
     <menuitem id="menu_material_request"
               name="Material Requests"
-              parent="menu_project_sub"
+              parent="menu_project_hub_root"
               action="action_material_request"
               sequence="20"/>
-
 </odoo>

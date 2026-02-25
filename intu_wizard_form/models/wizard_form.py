@@ -68,6 +68,7 @@ class XWizardForm(models.Model):
                     'x_studio_expected_deadline': wiz_line.x_studio_expected_deadline
                                                   or record.x_studio_expected_deadline,
                     'x_studio_unit': wiz_line.x_studio_unit.id if wiz_line.x_studio_unit else False,
+                    'x_studio_remarks_1':wiz_line.x_studio_remarks,
                 }))
 
         # ✅ Step 5: Create Custom Form

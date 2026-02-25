@@ -13,6 +13,66 @@ class MrpBom(models.Model):
         string='Status',
         default='draft'
     )
+    x_studio_mr_count = fields.Integer(
+        string="MR Count",
+        compute="_compute_mr_count"
+    )
+
+    def goto_mr(self):
+        self.ensure_one()  # Ensures the button click only processes one record
+
+        # Use self instead of record
+        product_template = self.product_tmpl_id
+
+        if not product_template:
+            raise UserError("Product Template is not set.")
+
+        # Search x_custom_form records
+        custom_forms = self.env['x_custom_form'].search([
+            ('x_studio_sale_order_number', '=', product_template.name)
+        ])
+
+        if not custom_forms:
+            raise UserError(f"No Custom Form found for: {product_template.name}")
+
+        # Define the base action
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Custom Forms',
+            'res_model': 'x_custom_form',
+            'target': 'current',
+        }
+
+        # Open form view if only one record exists, otherwise show the list
+        if len(custom_forms) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': custom_forms.id,
+            })
+        else:
+            action.update({
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', custom_forms.ids)],
+            })
+
+        return action  # Crucial: Odoo needs the 'return' to trigger the UI change
+
+
+
+
+    @api.depends('product_tmpl_id')
+    def _compute_mr_count(self):
+        for record in self:
+            # 1. Check if product_tmpl_id exists to avoid errors
+            if record.product_tmpl_id:
+                # 2. Search for custom forms matching the name
+                custom_forms_count = self.env['x_custom_form'].search_count([
+                    ('x_studio_sale_order_number', '=', record.product_tmpl_id.name)
+                ])
+                record.x_studio_mr_count = custom_forms_count
+            else:
+                record.x_studio_mr_count = 0
+
 
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id_set_project(self):

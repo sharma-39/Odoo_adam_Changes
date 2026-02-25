@@ -15,8 +15,8 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
           <xpath expr="//field[@name='product_qty']" position="attributes">
-    <attribute name="nolabel">1</attribute><attribute name="invisible">1</attribute>
-</xpath>
+            <attribute name="nolabel">1</attribute><attribute name="invisible">1</attribute>
+        </xpath>
            <xpath expr="//field[@name='code']" position="replace">
                <field name="code" invisible="1"/>
            </xpath>
@@ -53,9 +53,29 @@
                 <field name="code"/>
             </xpath>
 
+            <xpath expr="/form//button[@name='707']" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
+  <xpath expr="/form//button[@name='724']" position="attributes">
+    <attribute name="invisible">True</attribute>
+  </xpath>
             <!-- Move project_id below code -->
             <xpath expr="//field[@name='code']" position="after">
                 <field name="project_id"/>
+            </xpath>
+            <xpath expr="//button[@name='707']" position="attributes">
+            <attribute name="groups"></attribute>
+            <attribute name="invisible">0</attribute>
+        </xpath>
+
+        <xpath expr="//button[@name='724']" position="attributes">
+            <attribute name="invisible">0</attribute>
+        </xpath>
+
+            <xpath expr="/form//button[@name='724']" position="after">
+                 <button name="goto_mr" type="object" class="oe_stat_button" icon="fa-edit" invisible="x_studio_mr_count == 0">
+                     <field name="x_studio_mr_count" widget="statinfo" string="Material Request" options="{'format': false}"/>
+                 </button>
             </xpath>
 
 
@@ -88,9 +108,10 @@
         <field name="model">mrp.bom</field>
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="attributes">
-                <attribute name="readonly">not parent.x_studio_approve_enable</attribute>
-            </xpath>
+         <xpath expr="/form//field[@name='bom_line_ids']" position="attributes">
+    <attribute name="force_save">1</attribute>
+    <attribute name="readonly">x_status_bar == "approve"</attribute>
+  </xpath>
             <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="after">
 
                 <field name="x_studio_mr_qty" readonly="1"/>

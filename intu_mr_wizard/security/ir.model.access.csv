@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_x_mr_wizard,x_mr_wizard,model_x_mr_wizard,,1,1,1,1
+access_x_mr_wizard_line,x_mr_wizard_line_ba9e6,model_x_mr_wizard_line_ba9e6,,1,1,1,1
