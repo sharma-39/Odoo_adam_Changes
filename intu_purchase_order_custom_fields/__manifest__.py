@@ -6,6 +6,7 @@
     "depends": ["purchase", "sale", "account"],
     "data": [
         "views/purchase_order_view.xml",
+        "data/sequence.xml",
     ],
     "installable": True,
     "application": False,

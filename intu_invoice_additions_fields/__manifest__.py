@@ -1,9 +1,9 @@
 {
-    'name': 'Invoice Additional Fields(Payment Received Amount)',
+    'name': 'Invoice Additional Fields',
     'version': '1.0',
     'summary': 'Adds computed Payment Received field in Invoice',
     'author': 'Sharma',
-    'depends': ['account'],
+    'depends': ['account',"sale"],
     'data': [],
     'installable': True,
     'application': False,

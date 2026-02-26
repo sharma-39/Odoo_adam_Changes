@@ -22,7 +22,6 @@
 
                     <group>
                         <group>
-                            <field name="x_name"/>
                             <field name="x_studio_mr_number"/>
                             <field name="x_studio_sale_order_number"/>
                             <field name="x_studio_project"/>
@@ -38,7 +37,7 @@
                     <notebook>
                         <page string="Material Lines">
                             <field name="x_custom_form_line_ids">
-                                <list editable="bottom">
+                                <list create="false" editable="bottom">
                                     <field name="x_studio_sequence" widget="handle"/>
                                     <field name="x_studio_product"/>
                                     <field name="x_studio_remarks_1"/>
@@ -62,7 +61,7 @@
         <field name="name">material.request.list</field>
         <field name="model">x_custom_form</field>
         <field name="arch" type="xml">
-            <list>
+            <list create="false">
                 <field name="x_studio_mr_number"/>
                 <field name="x_studio_sale_order_number"/>
                 <field name="x_studio_mr_date"/>
@@ -90,4 +89,19 @@
               parent="menu_project_hub_root"
               action="action_material_request"
               sequence="20"/>
+
+
+    <menuitem id="menu_material_request"
+          name="Bill Of Materials"
+          parent="menu_project_hub_root"
+          action="mrp.mrp_bom_form_action"
+          sequence="20"/>
+
+    <menuitem id="menu_material_request"
+              name="Material Requests"
+              parent="menu_project_hub_root"
+              action="action_material_request"
+              sequence="20"/>
+
+
 </odoo>

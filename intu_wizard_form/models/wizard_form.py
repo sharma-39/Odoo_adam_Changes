@@ -4,7 +4,7 @@ class XWizardForm(models.Model):
     _name = 'x.wizard.form'
     _description = 'Wizard Form'
 
-    x_name = fields.Char('Name')
+    x_name = fields.Char('Name',readonly=True)
     x_studio_expected_deadline = fields.Datetime('Expected Deadline')
     x_studio_projects = fields.Many2one('project.project', 'Project')
     x_studio_validator = fields.Boolean('Validator')
@@ -70,6 +70,11 @@ class XWizardForm(models.Model):
                     'x_studio_unit': wiz_line.x_studio_unit.id if wiz_line.x_studio_unit else False,
                     'x_studio_remarks_1':wiz_line.x_studio_remarks,
                 }))
+        if not lines:
+            raise UserError(
+                "No pending quantities available.\n"
+                "All required quantities are already delivered or covered by existing PO."
+            )
 
         # ✅ Step 5: Create Custom Form
         if lines:

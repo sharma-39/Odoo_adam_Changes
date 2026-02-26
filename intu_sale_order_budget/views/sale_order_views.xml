@@ -22,12 +22,16 @@
                 </page>
             </xpath>
              <xpath expr="//page[@name='order_lines']/field[@name='order_line']/list//field[@name='price_subtotal']" position="after">
-    <field name="x_unit_cost_material" optional="show" readonly="False"/>
-    <field name="x_unit_labour_cost" optional="show" readonly="False"/>
-    <field name="x_studio_material_cost" optional="show"/>
-    <field name="x_studio_labour_cost" optional="show"/>
-    <field name="x_studio_total_cost" optional="show"/>
-  </xpath>
+                    <field name="x_unit_cost_material" optional="show" readonly="False"/>
+                    <field name="x_unit_labour_cost" optional="show" readonly="False"/>
+                    <field name="x_studio_material_cost" optional="show"/>
+                    <field name="x_studio_labour_cost" optional="show"/>
+                    <field name="x_studio_total_cost" optional="show"/>
+             </xpath>
+
+              xpath expr="//page[@name='order_lines']/field[@name='order_line']/list//field[@name='price_subtotal']" position="attributes">
+                <attribute name="readonly">state == 'sale'</attribute>
+            </xpath>
         </field>
     </record>
 

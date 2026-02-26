@@ -8,30 +8,91 @@
 
             <!-- 1️⃣ Move Partner Before RFQ Number -->
 
+            <xpath expr="//field[@name='order_line']/list/control/create[@name='add_product_control']" position="attributes">
+                 <attribute name="invisible">parent.x_studio_purchase_type != 'Normal Order'</attribute>
+             </xpath>
+             <xpath expr="//field[@name='order_line']/list/control/create[@name='add_section_control']" position="attributes">
+                 <attribute name="invisible">parent.x_studio_purchase_type != 'Normal Order'</attribute>
+             </xpath>
+             <xpath expr="//field[@name='order_line']/list/control/create[@name='add_note_control']" position="attributes">
+                 <attribute name="invisible">parent.x_studio_purchase_type != 'Normal Order'</attribute>
+             </xpath>
+             <xpath expr="//field[@name='order_line']/list/field[@name='product_id']" position="attributes">
+            <attribute name="readonly">parent.x_studio_purchase_type != 'Normal Order'</attribute>
+
+        </xpath>
+                    <xpath expr="//field[@name='order_line']/list/field[@name='product_qty']" position="attributes">
+            <attribute name="readonly">parent.x_studio_purchase_type != 'Normal Order'</attribute>
+
+        </xpath>
+
+        <xpath expr="//field[@name='order_line']/list/control/button[@name='action_add_from_catalog']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+            <xpath expr="/form/header/field[@name='state']" position="after">
+                <button name="button_approve_custom"
+                        string="Approve"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="x_studio_po_approve == True or state != 'draft'"/>
+            </xpath>
              <xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="before">
                     <field name="x_studio_rfq_number"/>
+            </xpath>
+
+            <xpath expr="//header/button[@name='button_confirm'][1]" position="attributes">
+                <attribute name="invisible">x_studio_po_approve == False or state != 'draft'</attribute>
+            </xpath>
+
+            <xpath expr="//header/button[@name='button_confirm'][2]" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
 
             <!-- 2️⃣ Move Vendor Reference Below Project -->
             <xpath expr="/form/sheet/group/group/field[@name='partner_ref']" position="after">
                 <field name="project_id"/>
-                <field name="x_studio_responsibility"/>
+                <field name="x_studio_budget"></field>
+                <field name="x_studio_responsibility" widget="many2one_avatar"/>
             </xpath>
 
             <!-- 3️⃣ Origin Before Purchase Type -->
             <xpath expr="//field[@name='date_order']" position="before">
                 <field name="x_studio_purchase_type"></field>
-                 <field name="origin"/>
-                 <field name="x_studio_mr_number"/>
+                <field name="x_studio_po_tags" widget="many2many_tags"></field>
+                 <field name="origin" readonly="1"/>
+                 <field name="x_studio_mr_number" readonly="1"/>
             </xpath>
 
-            <xpath expr="//div[@name='reminder']" position="attributes">
-    <attribute name="invisible">True</attribute>
-</xpath>
+             <xpath expr="//field[@name='x_studio_responsibility']" position="attributes">
+                <attribute name="readonly">state == 'purchase'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='x_studio_purchase_type']" position="attributes">
+                <attribute name="readonly">state == 'purchase'</attribute>
+            </xpath>
 
-<xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
-    <attribute name="invisible">True</attribute>
-</xpath>
+
+              <xpath expr="//field[@name='x_studio_po_tags']" position="attributes">
+                <attribute name="readonly">state == 'purchase'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='x_studio_mr_number']" position="attributes">
+                <attribute name="invisible">x_studio_purchase_type == 'Normal Order'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="attributes">
+                <attribute name="invisible">x_studio_purchase_type == 'Normal Order'</attribute>
+            </xpath>
+              <xpath expr="//field[@name='x_studio_budget']" position="attributes">
+                <attribute name="invisible">x_studio_purchase_type == 'Normal Order'</attribute>
+            </xpath>
+
+
+            <xpath expr="//div[@name='reminder']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
 
             <!-- 4️⃣ MR Number After Purchase Type -->
 
@@ -39,7 +100,113 @@
                 <field name="x_studio_remarks"/>
             </xpath>
 
+          <xpath expr="//sheet" position="inside">
+              <group name="purchase_header">
+                    <field name="x_studio_po_approve" invisible="1"/>
+
+                    <widget name="web_ribbon" title="RFQ Approved"
+                            bg_color="text-bg-success"
+                            invisible="x_studio_po_approve == False or state == 'purchase'"/>
+
+                    <widget name="web_ribbon" title="Purchase Order"
+                            bg_color="text-bg-success"
+                            invisible="state != 'purchase'"/>
+              </group>
+        </xpath>
         </field>
     </record>
+    <record id="view_purchase_order_list_inherit_custom" model="ir.ui.view">
+    <field name="name">purchase.order.list.inherit.custom</field>
+    <field name="model">purchase.order</field>
+    <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+    <field name="arch" type="xml">
 
+        <xpath expr="//field[@name='name']" position="before">
+            <field name="x_studio_rfq_number" string="RFQ No." optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='name']" position="attributes">
+            <attribute name="string">PO Number</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='name']" position="after">
+            <field name="x_studio_mr_number" string="MR No" optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='x_studio_mr_number']" position="after">
+            <field name="project_id"  string="Job Order" optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="x_studio_responsibility"  widget="many2one_avatar"  optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='x_studio_responsibility']" position="after">
+            <field name="x_studio_vendor_trn_no" optional="hide"/>
+            <field name="x_studio_rfq_enable_selection"
+                   string="RFQ Approved"
+                   widget="badge"
+                   decoration-success="x_studio_rfq_enable_selection == 'approved'"
+                   decoration-primary="x_studio_rfq_enable_selection == 'not_approved'"
+                   optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='state']" position="after">
+            <field name="x_studio_po_status"
+                   widget="badge"
+                   decoration-primary="x_studio_po_status == 'Not Paid'"
+                   decoration-success="x_studio_po_status == 'Fully Paid'"
+                   decoration-info="x_studio_po_status == 'Partially Paid'"
+                   optional="show"/>
+        </xpath>
+
+    </field>
+</record>
+    <record id="view_purchase_rfq_list_inherit_custom" model="ir.ui.view">
+    <field name="name">purchase.rfq.list.inherit.custom</field>
+    <field name="model">purchase.order</field>
+    <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+    <field name="arch" type="xml">
+
+        <xpath expr="//field[@name='name']" position="before">
+            <field name="x_studio_rfq_number" string="RFQ No." optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='name']" position="attributes">
+            <attribute name="string">PO Number</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='name']" position="after">
+            <field name="x_studio_mr_number" string="MR No" optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='x_studio_mr_number']" position="after">
+            <field name="project_id" string="Job Order" optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="x_studio_responsibility" widget="many2one_avatar" optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='x_studio_responsibility']" position="after">
+            <field name="x_studio_vendor_trn_no" optional="hide"/>
+            <field name="x_studio_rfq_enable_selection"
+                   string="RFQ Approved"
+                   widget="badge"
+                   decoration-success="x_studio_rfq_enable_selection == 'approved'"
+                   decoration-primary="x_studio_rfq_enable_selection == 'not_approved'"
+                   optional="show"/>
+        </xpath>
+
+        <xpath expr="//field[@name='state']" position="after">
+            <field name="x_studio_po_status"
+                   widget="badge"
+                   decoration-primary="x_studio_po_status == 'Not Paid'"
+                   decoration-success="x_studio_po_status == 'Fully Paid'"
+                   decoration-info="x_studio_po_status == 'Partially Paid'"
+                   optional="show"/>
+        </xpath>
+
+    </field>
+</record>
 </odoo>

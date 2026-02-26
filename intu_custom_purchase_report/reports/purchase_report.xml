@@ -1,0 +1,612 @@
+<odoo>
+  <!-- ===============================
+         Custom Quotation PDF Report
+         =============================== -->
+  <template id="report_custom_purchase">
+     <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.basic_layout">
+
+  <div class="page">
+    <div class="oe_structure"/>
+    <div class="footer" style="text-align:center; font-size:12px; margin-top:20px; color:#555;">
+      <div style="width:100%; font-size:15px;">
+        <span style="float:left; font-size:15px; font-style:italic; white-space:nowrap;"> This is a computer-generated document. No signature or stamp required </span>
+        <span style="float:right;" t-if="report_type == 'pdf'"> Page <span class="page"/> / <span class="topage"/></span>
+      </div>
+    </div>
+    <t t-set="doc" t-value="doc"/>
+     <style>
+      .remark_label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #000;
+        margin-right: 4px;
+      }
+
+      .product_remark {
+        margin-top: 4px;
+        padding-left: 8px;
+        font-size: 13px;
+        color: #444;
+        border-left: 2px solid #bfbfbf;
+        line-height: 1.5;
+      }
+    </style>
+    <style>
+      .section-header {
+        background: #143e8a;
+        color: #fff;
+        font-weight: 700;
+        padding: 6px 30px;
+        font-size: 13px;
+        display: inline-block;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        text-align: left !important;
+        margin-top: 8px;
+      }
+
+      .section-header_summary {
+        background-color: #714b67;
+        color: white;
+        text-align: left;
+        font-weight: bold;
+        font-size: 15px;
+        text-transform: uppercase;
+      }
+
+      .invoice-label {
+        color: #000;
+        font-weight: bold;
+        font-size: 13px;
+      }
+
+      .invoice-value {
+        font-weight: 600;
+        color: #000;
+        font-size: 13px;
+      }
+
+      .invoice-field {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2px;
+      }
+
+      table {
+        width: 100%;
+        font-size: 14px;
+      }
+
+      th {
+        background-color: #143e8a;
+        color: #fff;
+        font-weight: 600;
+        padding: 12px 7px;
+        text-align: left;
+        border: 1px solid #2980b9;
+        font-weight: bold;
+        text-transform: uppercase;
+        vertical-align: middle;
+      }
+
+      td {
+        padding: 1px 3px;
+        border: 1px solid #e0e0e0;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .parent {
+        width: 100%;
+        display: -webkit-box;
+        /* OLD - iOS 6-, Safari 3.1-6 */
+        display: -ms-flexbox;
+        /* TWEENER - IE 10 */
+        display: -webkit-flex;
+        /* NEW - Chrome */
+        display: flex;
+        /* Standard */
+        /* Optional: for visual check */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        justify-content: space-between;
+      }
+
+      .left {
+        width: 40%;
+        -webkit-box-flex: 1;
+        /* OLD */
+        -ms-flex: 1;
+        /* TWEENER */
+        -webkit-flex: 1;
+        /* NEW */
+        flex: 1;
+        /* Standard */
+        padding: 10px;
+        box-sizing: border-box;
+        /* Ensures padding doesn't break width */
+      }
+
+      .right {
+        width: 50%;
+        -webkit-box-flex: 1;
+        /* OLD */
+        -ms-flex: 1;
+        /* TWEENER */
+        -webkit-flex: 1;
+        /* NEW */
+        flex: 1;
+        /* Standard */
+        padding: 10px;
+        box-sizing: border-box;
+        /* Ensures padding doesn't break width */
+      }
+
+      .left {
+        text-align: left;
+        white-space: nowrap;
+        /* Optional */
+      }
+
+      .right {
+        text-align: left;
+        margin-left: 100px;
+      }
+
+      .invoice-field {
+        display: flex;
+        gap: 7px;
+      }
+
+      .invoice-label {
+        width: 120px;
+        /* adjust as needed */
+        font-weight: bold;
+      }
+
+      .invoice-colon {
+        width: 10px;
+      }
+
+      .no-border-table {
+        border: 0px solid transparent !important;
+        -webkit-border: 0px solid transparent !important;
+        border-collapse: separate !important;
+        /* IMPORTANT FIX */
+      }
+
+      .no-border-table td,
+      .no-border-table tr {
+        text-align: left;
+        border: none !important;
+        -webkit-border: none !important;
+        box-shadow: none !important;
+      }
+    </style>
+    <div class="parent">
+      <div class="left">
+        <div>
+          <img style="max-width:650px; margin:2px;" t-att-src="'data:image/png;base64,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'"/>
+        </div>
+        <b>
+          <t t-esc="doc.company_id.name"/>
+        </b>
+        <br/>
+        <t t-esc="doc.company_id.street or ''"/>
+        <br/>
+        <t t-esc="doc.company_id.street2 or ''"/>
+        <br/>
+        <t t-esc="doc.company_id.city or ''"/>
+        <t t-if="doc.company_id.state_id">,
+          <t t-esc="doc.company_id.state_id.name"/>
+        </t>
+        <t t-if="doc.company_id.zip"> -
+          <t t-esc="doc.company_id.zip"/>
+        </t>
+        <br/>
+        <t t-if="doc.company_id.partner_id.country_id">
+          <t t-esc="doc.company_id.partner_id.country_id.name"/>
+        </t>
+        <br/>
+        <t t-if="doc.company_id.email">
+          <t t-esc="doc.company_id.email"/>
+        </t>
+        <br/>
+        <t t-if="doc.company_id.website">
+          <t t-esc="doc.company_id.website"/>
+        </t>
+        <br/>
+          <t t-if="doc.company_id.vat">
+            <span style="font-size:13px">TRN NO :  <t t-esc="doc.company_id.vat"/></span>
+          </t>
+      </div>
+      <div class="right">
+        <!--<div style="margin-left: 100px;text-align:center; font-family:'Times New Roman', serif; !important">-->
+        <!--    <span style="    white-space: nowrap;     font-size:17px;         font-weight:bold;         color:#001f54;         letter-spacing:1px;         border-bottom:2px solid #9bbcd1;         display:inline-block;         padding-bottom:3px;     "> PURCHASE ORDER </span>-->
+        <!--</div>-->
+        <div class="section-header" style="margin-left: 100px;!important; white-space: nowrap; font-size:15px;">PURCHASE ORDER</div>
+        <br/>
+        <br/>
+        <table>
+          <t t-if="doc.name != 'New'">
+            <tr>
+              <td style="padding-left:10px !important;text-align:left">
+                <span class="ingredient">
+                  <strong>PO Number</strong>
+                </span>
+              </td>
+              <td>
+                <t t-esc="doc.name"/>
+              </td>
+            </tr>
+          </t>
+          <tr>
+            <td style="text-align:left;padding-left:10px !important">
+              <strong>RFQ Number</strong>
+            </td>
+            <td>
+              <t t-esc="doc.x_studio_rfq_number or '' "/>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-left:10px !important;text-align:left">
+              <span class="ingredient">
+                <strong>Date</strong>
+              </span>
+            </td>
+            <td>
+              <t t-esc="doc.date_order.strftime('%d-%m-%Y')"/>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="parent" style="margin-top:-27px">
+      <div class="left">
+        <div class="section-header">VENDOR</div>
+        <table class="no-border-table" style="font-size:14px; ;">
+          <tr>
+            <td colspan="9">
+              <t t-if="doc.partner_id.name">
+                <b>
+                  <t t-esc="doc.partner_id.name"/>
+                </b>
+                <br/>
+              </t>
+              <t t-esc="doc.partner_id.street or ''"/>
+              <t t-esc="doc.partner_id.street2 or ''"/>
+              <br/>
+              <t t-esc="doc.partner_id.city or ''"/>
+              <t t-if="doc.partner_id.state_id">,
+                <t t-esc="doc.partner_id.state_id.name"/>
+              </t>
+              <t t-if="doc.partner_id.zip"> -
+                <t t-esc="doc.partner_id.zip"/>
+              </t>
+              <br/>
+              <t t-if="doc.company_id.partner_id.country_id">
+                <t t-esc="doc.company_id.partner_id.country_id.name"/>
+              </t>
+            </td>
+          </tr>
+          <tr t-if="doc.partner_id.phone">
+            <td class="invoice-label">Phone Number</td>
+            <td class="invoice-colon">:</td>
+            <td t-esc="doc.partner_id.phone"/>
+          </tr>
+          <tr t-if="doc.partner_id.email">
+            <td class="invoice-label">Email</td>
+            <td class="invoice-colon">:</td>
+            <td t-esc="doc.partner_id.email"/>
+          </tr>
+          <!-- VAT TRN NO -->
+          <tr t-if="doc.partner_id.vat">
+            <td class="invoice-label">VAT TRN NO</td>
+            <td class="invoice-colon">:</td>
+            <td t-esc="doc.partner_id.vat"/>
+          </tr>
+        </table>
+      </div>
+      <div class="right">
+        <div class="section-header">PROJECT DETAIL</div>
+        <table class="no-border-table" style="font-size:14px; line-height:1.5;vertical-align: middle;">
+          <!-- Project Code -->
+          <t t-if="doc.project_id">
+            <tr t-if="doc.x_studio_sales_order">
+              <td class="invoice-label">Project Code</td>
+              <td class="invoice-colon">:</td>
+              <td t-esc="doc.x_studio_sales_order.name or ''"/>
+            </tr>
+            <!-- MR Number -->
+            <tr t-if="doc.x_studio_mr_number">
+              <td class="invoice-label">MR Number</td>
+              <td class="invoice-colon">:</td>
+              <td t-esc="doc.x_studio_mr_number or ''"/>
+            </tr>
+          </t>
+          <!-- Contact Person -->
+          <tr t-if="doc.x_studio_responsibility">
+            <td class="invoice-label">Contact Person</td>
+            <td class="invoice-colon">:</td>
+            <td t-esc="doc.x_studio_responsibility.name or ''"/>
+          </tr>
+          <!-- Contact Number -->
+          <tr t-if="doc.x_studio_responsibility.mobile_phone">
+            <td class="invoice-label">Contact Number</td>
+            <td class="invoice-colon">:</td>
+            <td t-esc="doc.x_studio_responsibility.mobile_phone or ''"/>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <t t-set="discount_amount" t-value="abs((doc.x_studio_total_before_discount or 0.0) - (doc.amount_untaxed or 0.0))"/>
+    <table style="padding: 3px 3px; !important">
+      <thead>
+        <tr>
+          <th style="width:5%;text-align: center;!important">S.NO</th>
+          <th style="width:75%;text-align:center!important">Description</th>
+          <th>Unit</th>
+          <th>Qty</th>
+          <th style="text-align: right;!important;white-space: nowrap;">Unit Price</th>
+
+           <t t-if="doc.x_studio_total_before_discount and abs(discount_amount) &gt; 0.0">
+           <th style="text-align: right;!important;white-space: nowrap;">Total Amount</th>
+          </t>
+          <t t-else="">
+            <th style="text-align: right;!important;white-space: nowrap;">Total Amount</th>
+            <th>VAT Amount</th>
+          <th>Net Total</th>
+          </t>
+
+        </tr>
+      </thead>
+      <tbody>
+
+      <t t-if="doc.x_studio_total_before_discount and abs(discount_amount) &gt; 0.0">
+        <t t-set="serial" t-value="1"/>
+        <t t-foreach="doc.order_line" t-as="line">
+          <t t-if="line.display_type == 'line_section' and not line.is_downpayment">
+            <tr style="background-color:#f2f2f2; font-weight:bold; text-transform: uppercase;padding: 3px 3px; !important">
+              <td colspan="8" style="padding: 3px 3px; !important;text-align:left;">
+                <t t-esc="line.name"/>
+              </td>
+            </tr>
+          </t>
+
+          <t t-if="line.display_type != 'line_section' and not line.is_downpayment">
+            <tr>
+              <td style="padding: 3px 3px; !important">
+                <t t-esc="serial"/>
+              </td>
+              <td style="text-align:left;padding: 3px 3px; !important">
+                <t t-esc="line.name or ''"/>
+                 <t t-if="line.x_studio_remarks">
+                    <div class="product_remark">
+                      <span class="remark_label">Remark:</span>
+                      <t t-esc="line.x_studio_remarks"/>
+                    </div>
+                  </t>
+              </td>
+              <td style="text-align:center;padding: 3px 3px; !important">
+                <t t-esc="line.product_uom_id.name or ''"/>
+              </td>
+              <td style="text-align:center;padding: 3px 3px; !important">
+                <t t-esc="'{:.2f}'.format((line.product_qty) or 0)"/>
+              </td>
+              <td style="text-align:center;padding: 3px 3px; !important">
+                <t t-esc="'{:.2f}'.format((line.price_unit) or 0.0)"/>
+              </td>
+              <t t-if="doc.x_studio_total_before_discount">
+                <td class="amount" style=" padding-right:10px;">
+                  <t t-esc="'{:.2f}'.format(int(line.product_qty) * line.price_unit)"/>
+                </td>
+              </t>
+              <t t-else="">
+                <td class="amount" style="text-align: right !important">
+                  <t t-esc="'{:.2f}'.format(line.price_subtotal)"/>
+                </td>
+              </t>
+              <!--<td style="text-align:right !important;padding: 3px 3px; !important">-->
+              <!--  <t t-esc="'{:.2f}'.format((line.price_total- line.price_subtotal) or 0.0)"/>-->
+              <!--</td>-->
+              <!--<t t-if="doc.x_studio_total_before_discount">-->
+              <!--  <td class="amount" style="padding-right:10px;">-->
+              <!--    <t t-esc="'{:.2f}'.format(line.product_qty * line.price_unit)"/>-->
+              <!--  </td>-->
+              <!--</t>-->
+              <!--<t t-else="">-->
+              <!--  <td class="amount" style="padding-right:10px;">-->
+              <!--    <t t-esc="'{:.2f}'.format(line.price_subtotal)"/>-->
+              <!--  </td>-->
+              <!--</t>-->
+            </tr>
+            <t t-set="serial" t-value="serial + 1"/>
+          </t>
+        </t>
+      </t>
+      <t t-else="">
+        <t t-set="serial" t-value="1"/>
+        <t t-foreach="doc.order_line" t-as="line">
+          <t t-if="line.display_type == 'line_section' and not line.is_downpayment">
+            <tr style="background-color:#f2f2f2; font-weight:bold; text-transform: uppercase;padding: 3px 3px; !important">
+              <td colspan="8" style="padding: 3px 3px; !important;text-align:left;">
+                <t t-esc="line.name"/>
+              </td>
+            </tr>
+          </t>
+
+          <t t-if="line.display_type != 'line_section' and not line.is_downpayment">
+            <tr>
+              <td style="padding: 3px 3px; !important">
+                <t t-esc="serial"/>
+              </td>
+              <td style="text-align:left;padding: 3px 3px; !important">
+                <t t-esc="line.name or ''"/>
+                 <t t-if="line.x_studio_remarks">
+                    <div class="product_remark">
+                      <span class="remark_label">Remark:</span>
+                      <t t-esc="line.x_studio_remarks"/>
+                    </div>
+                  </t>
+              </td>
+              <td style="text-align:center;padding: 3px 3px; !important">
+                <t t-esc="line.product_uom_id.name or ''"/>
+              </td>
+              <td style="text-align:center;padding: 3px 3px; !important">
+                <t t-esc="'{:.2f}'.format((line.product_qty) or 0)"/>
+              </td>
+              <td style="text-align:center;padding: 3px 3px; !important">
+                <t t-esc="'{:.2f}'.format((line.price_unit) or 0.0)"/>
+              </td>
+
+
+                <td class="amount" style=" padding-right:10px;">
+                  <t t-esc="'{:.2f}'.format(line.price_subtotal)"/>
+                </td>
+
+              <td style="text-align:right !important;padding: 3px 3px; !important">
+                <t t-esc="'{:.2f}'.format((line.price_total- line.price_subtotal) or 0.0)"/>
+              </td>
+
+                <td class="amount" style="padding-right:10px;">
+                  <t t-esc="'{:.2f}'.format(line.price_total)"/>
+                </td>
+
+            </tr>
+            <t t-set="serial" t-value="serial + 1"/>
+          </t>
+        </t>
+      </t>
+
+      </tbody>
+      <t t-if="doc.x_studio_total_before_discount and abs(discount_amount) &gt; 0.0">
+      <tr>
+        <td colspan="3" rowspan="6" style="width:95%;text-align:center; vertical-align:middle;font-weight:bold;">
+          <t t-set="amount_words" t-value="doc.currency_id.amount_to_text(doc.amount_total)"/> Amount in Words: <strong>
+            <t t-esc="amount_words"/> Only (
+            <t t-esc="doc.currency_id.name"/>)
+          </strong>
+        </td>
+      </tr>
+      <t t-set="discount_amount" t-value="abs((doc.x_studio_total_before_discount or 0.0) - (doc.amount_untaxed or 0.0))"/>
+      <t t-if="doc.x_studio_total_before_discount and abs(discount_amount) &gt; 0.0">
+        <tr>
+          <td colspan="2" style="font-weight:bold;text-align:left;"> TOTAL </td>
+          <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+            <span t-esc="'{:,.2f} {}'.format(                 doc.x_studio_total_before_discount or 0.0,                 doc.currency_id.symbol or ''             )"/>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="font-weight:bold;text-align:left;"> DISCOUNT </td>
+          <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+            <span t-esc="'{:,.2f} {}'.format(                 discount_amount,                 doc.currency_id.symbol or ''             )"/>
+          </td>
+        </tr>
+      </t>
+
+      <tr>
+        <td colspan="2" style="font-weight:bold;text-align:left;"> TOTAL BEFORE VAT </td>
+        <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+          <span t-esc="'{:,.2f} {}'.format(                 doc.amount_untaxed or 0.0,                 doc.currency_id.symbol or ''             )"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="width:75%;font-weight:bold;text-align:left;">VAT</td>
+        <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+          <span t-esc="'{:,.2f} {}'.format(doc.amount_tax, doc.currency_id.symbol or '')"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="font-weight:bold;text-align:left;">TOTAL AFTER VAT</td>
+        <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+          <span t-esc="'{:,.2f} {}'.format(doc.amount_total or 0.0, doc.currency_id.symbol or '')"/>
+        </td>
+      </tr>
+      </t>
+      <t t-else="">
+           <tr>
+        <td colspan="5" rowspan="6" style="width:95%;text-align:center; vertical-align:middle;font-weight:bold;">
+          <t t-set="amount_words" t-value="doc.currency_id.amount_to_text(doc.amount_total)"/> Amount in Words: <strong>
+            <t t-esc="amount_words"/> Only (
+            <t t-esc="doc.currency_id.name"/>)
+          </strong>
+        </td>
+      </tr>
+      <t t-set="discount_amount" t-value="abs((doc.x_studio_total_before_discount or 0.0) - (doc.amount_untaxed or 0.0))"/>
+      <t t-if="doc.x_studio_total_before_discount and abs(discount_amount) &gt; 0.0">
+        <tr>
+          <td colspan="2" style="font-weight:bold;text-align:left;"> TOTAL </td>
+          <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+            <span t-esc="'{:,.2f} {}'.format(                 doc.x_studio_total_before_discount or 0.0,                 doc.currency_id.symbol or ''             )"/>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="font-weight:bold;text-align:left;"> DISCOUNT </td>
+          <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+            <span t-esc="'{:,.2f} {}'.format(                 discount_amount,                 doc.currency_id.symbol or ''             )"/>
+          </td>
+        </tr>
+      </t>
+
+      <tr>
+        <td colspan="2" style="font-weight:bold;text-align:left;"> TOTAL BEFORE VAT </td>
+        <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+          <span t-esc="'{:,.2f} {}'.format(                 doc.amount_untaxed or 0.0,                 doc.currency_id.symbol or ''             )"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="width:75%;font-weight:bold;text-align:left;">VAT</td>
+        <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+          <span t-esc="'{:,.2f} {}'.format(doc.amount_tax, doc.currency_id.symbol or '')"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="font-weight:bold;text-align:left;">TOTAL AFTER VAT</td>
+        <td style="text-align:right;font-weight:bold; white-space: nowrap;">
+          <span t-esc="'{:,.2f} {}'.format(doc.amount_total or 0.0, doc.currency_id.symbol or '')"/>
+        </td>
+      </tr>
+      </t>
+    </table>
+
+    <t t-if="doc.note">
+      <div style="margin-top:20px; font-size:14px;">
+        <span t-field="doc.note"/>
+      </div>
+    </t>
+  </div>
+  <div>
+    <br/>
+    <p style="text-align:center;font-size:12px">If you have any questions about this purchase order, please contact <br/>
+      <t t-if="doc.company_id.email">
+        <t t-esc="doc.company_id.phone"/> /
+        <t t-esc="doc.company_id.email"/>
+      </t>
+    </p>
+    <p style="text-align:center;font-size:12px"/>
+  </div>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="8" style="padding: 40px; width: 100%;">
+          <div style="width:100%; font-size:13px; overflow:hidden; page-break-inside: avoid;">
+            <div style="float:left; width:33.33%; text-align:left;">AUTHORIZED SIGNATURE <br/>
+              <!--<strong>-->
+              <!--  <t t-esc="(doc.user_id.name or '').upper()" />-->
+              <!--</strong>-->
+            </div>
+            <div style="float:left; width:20.33%; text-align:center;"/>
+            <div style="float:left; width:55.33%; text-align:right;">ACCEPTANCE BY : <br/> NAME: <br/> SIGNATURE : </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</t>
+        </t>
+      </t>
+
+  </template>
+</odoo>

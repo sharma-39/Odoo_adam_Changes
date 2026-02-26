@@ -3,7 +3,7 @@
     "version": "1.0",
     "category": "Custom",
     "summary": "Material Request Management",
-    "depends": ["mail", "sale", "project", "purchase"],
+    "depends": ["mail", "sale", "project", "purchase","mrp"],
     "data": [
         "views/material_request_views.xml",
         "security/ir.model.access.csv",

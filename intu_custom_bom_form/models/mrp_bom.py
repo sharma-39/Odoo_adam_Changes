@@ -164,6 +164,11 @@ class MrpBom(models.Model):
                 'x_studio_remarks': bom_line.x_studio_remarks,
                 'x_studio_unit': bom_line.product_uom_id.id,
             }))
+        if not lines:
+            raise UserError(
+                "⚠️ Material requests have been generated for all BOM lines; "
+                "no additional quantities are required beyond the BOM demand."
+            )
 
         # 🔍 Find related Sale Order
         sale_order = self.env['sale.order'].search([

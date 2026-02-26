@@ -27,7 +27,7 @@ class XWizardFormLine(models.Model):
     )
 
 
-    @api.constrains('x_studio_qty', 'x_studio_mr_qty')
+    @api.onchange('x_studio_mr_qty')
     def _check_mr_not_greater_than_demand(self):
         for rec in self:
             if rec.x_studio_qty and rec.x_studio_mr_qty:

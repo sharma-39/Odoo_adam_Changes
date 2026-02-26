@@ -67,7 +67,7 @@ class PurchaseOrder(models.Model):
         string="Responsible"
     )
 
-    x_studio_rfq_number = fields.Char(string="RFQ Number")
+    x_studio_rfq_number = fields.Char(string="RFQ Number",readonly=True)
 
     x_studio_sales_order = fields.Many2one(
         'sale.order',
@@ -100,6 +100,11 @@ class PurchaseOrder(models.Model):
         copy=True,
         readonly=True
     )
+    x_studio_po_tags = fields.Many2many(
+        'x_po_category',  # The destination model
+        string="PO Tags"
+    )
+
 
     @api.depends('x_studio_po_approve')
     def _compute_rfq_status(self):
@@ -122,19 +127,18 @@ class PurchaseOrder(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-
-            # Always force name = 'New'
-            vals['name'] = 'New'
-
-            # Generate your custom reference
+            # Generate your custom reference first
             if not vals.get('x_studio_rfq_number'):
                 vals['x_studio_rfq_number'] = self.env['ir.sequence'].next_by_code(
                     'purchase.order.ref_seq'
                 )
 
-        # Call super BUT skip default sale sequence logic
-        self = self.with_context(default_name='New')
+        # Let Odoo create the record (it will probably assign a PO number here)
         records = super(PurchaseOrder, self).create(vals_list)
+
+        # NOW force the name to 'New' for the created records
+        # This overwrites whatever the standard sequence just did
+        records.write({'name': 'New'})
 
         return records
 
@@ -295,6 +299,24 @@ class PurchaseOrder(models.Model):
         return True
 
     def button_confirm(self):
+        # 1. Run the standard Odoo confirmation logic
+        res = super(PurchaseOrder, self).call_button_confirm()  # or super().button_confirm()
+
+        for record in self:
+            # 2. Check if the name is still 'New' or was just assigned the default '/'
+            # We also check if it's in the 'purchase' state as confirmed by super()
+            if record.state <= 'purchase' and record.name in ('New', '/', False):
+
+                # 3. Fetch your specific sequence
+                new_name = self.env['ir.sequence'].next_by_code('purchase.order.normal')
+
+                # 4. Use write() to bypass standard sequence protection
+                if new_name:
+                    record.write({'name': new_name})
+
+        return res
+
+    def button_confirm(self):
         res = super().button_confirm()
 
         for record in self:
@@ -305,7 +327,38 @@ class PurchaseOrder(models.Model):
 
                 record.name = next_seq
 
+            if record.project_id:
+                record.project_id.write({
+                    # remaining Budget
+                    'x_studio_purchase_budget': record.project_id.x_studio_purchase_budget + record.amount_total,
+                })
         return res
+
+    def button_approve_custom(self):
+        """ Custom Approve Button Logic """
+        for record in self:
+            partner_name = record.partner_id.name or ""
+
+            # 1. Vendor Check
+            if "ADAM EMC" in partner_name.upper():
+                raise UserError("🛑 Revision Required: Orders cannot proceed with the AMC vendor (ADAM EMC).")
+
+            # 2. Lines Check
+            if not record.order_line:
+                raise UserError("❌ Unable to approve: The Purchase Order has no Order Lines.")
+
+            # 3. Budget Validation
+            if record.x_studio_purchase_type != "Normal Order" and record.project_id:
+                remaining = record.project_id.x_studio_po_remaining_budget or 0.0
+                if record.amount_total > remaining:
+                    raise UserError(
+                        f"⚠️ Budget Exceeded!\nTotal: {record.amount_total:,.2f}\nRemaining: {remaining:,.2f}")
+
+            # 4. Mark Approved
+            record.write({
+                'x_studio_po_approved_widget':False,
+                'x_studio_po_approve': True
+            })
 
 
 # ==========================================

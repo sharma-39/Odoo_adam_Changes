@@ -10,17 +10,19 @@ class MaterialRequest(models.Model):
 
     display_name = fields.Char(string="Display Name", compute="_compute_display_name", store=True)
 
-    x_studio_mr_number = fields.Char(string="MR Number")
+    x_studio_mr_number = fields.Char(string="MR Number",readonly=True)
     x_name = fields.Char(string="Name")
 
     x_studio_sale_order_number = fields.Many2one(
         'sale.order',
-        string="Sale Order"
+        string="Job Order",
+        readonly=True
     )
 
     x_studio_project = fields.Many2one(
         'project.project',
-        string="Project"
+        string="Project",
+        readonly=True
     )
 
     x_studio_delivery_update = fields.Boolean(string="Delivery Update")
@@ -362,12 +364,14 @@ class MaterialRequestLine(models.Model):
 
     x_studio_product = fields.Many2one(
         'product.product',
-        string="Material Name"
+        string="Material Name",
+        readonly=True
     )
 
     x_studio_many2one_field_1md_1j8iqtd9q = fields.Many2one(
         'product.product',
-        string="Product"
+        string="Product",
+        readonly=True
     )
 
     x_studio_unit = fields.Many2one(

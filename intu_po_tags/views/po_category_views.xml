@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- List View Only -->
+    <record id="view_po_category_list" model="ir.ui.view">
+        <field name="name">x.po.category.list</field>
+        <field name="model">x_po_category</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" default_order="x_studio_sequence asc, id asc">
+                <field name="x_name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_po_category" model="ir.actions.act_window">
+        <field name="name">PO Tags</field>
+        <field name="res_model">x_po_category</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- Menu inside Purchase → Configuration -->
+     <menuitem id="menu_po_category"
+              name="PO Tags"
+              parent="purchase.menu_purchase_config"
+              action="action_po_category"
+              sequence="40"/>
+
+
+</odoo>

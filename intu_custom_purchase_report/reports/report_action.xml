@@ -1,0 +1,45 @@
+<odoo>
+
+    <!-- ===============================
+         Paper Format : purchase
+         =============================== -->
+    <record id="paperformat_purchase" model="report.paperformat">
+        <field name="name">purchase Format</field>
+
+        <!-- A4 -->
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+
+        <!-- Margins (mm) -->
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+
+        <!-- Header -->
+        <field name="header_line">False</field>
+        <field name="header_spacing">35</field>
+
+        <!-- PDF -->
+        <field name="dpi">90</field>
+        <field name="disable_shrinking">False</field>
+    </record>
+
+    <!-- ===============================
+         Report Action : Custom purchase
+         =============================== -->
+    <record id="action_report_custom_purchase" model="ir.actions.report">
+        <field name="name">Purchase Report Custom</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">intu_custom_purchase_report.report_custom_purchase</field>
+        <field name="report_file">intu_custom_purchase_report.report_custom_purchase</field>
+
+        <!-- 🔗 Link paper format -->
+        <field name="paperformat_id" ref="intu_custom_purchase_report.paperformat_purchase"/>
+
+        <field name="print_report_name">'Purchase Order  - %s' % (object.x_studio_rfq_number if object.display_name == 'New' else object.display_name)</field>
+
+    </record>
+
+</odoo>

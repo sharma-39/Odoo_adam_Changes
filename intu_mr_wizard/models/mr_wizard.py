@@ -14,21 +14,23 @@ class MrWizard(models.Model):
     # BASIC
     # =====================
     x_name = fields.Char(string="Description")
-    x_studio_mr_number = fields.Char(string="MR Number")
-    x_studio_dr_number = fields.Char(string="DO Number")
+    x_studio_mr_number = fields.Char(string="MR Number",readonly=True)
+    x_studio_dr_number = fields.Char(string="DO Number",readonly=True)
 
     x_studio_flow = fields.Char(string="Flow")
     x_studio_flowss = fields.Char(string="Flowss")
-    x_studio_job_order = fields.Char(string="Job Order")
+    x_studio_job_order = fields.Char(string="Job Order",readonly=True)
 
     x_studio_job_order_no = fields.Many2one(
         'sale.order',
-        string="Job Order"
+        string="Job Order",
+        readonly=True
     )
 
     x_studio_project = fields.Many2one(
         'project.project',
-        string="Project"
+        string="Project",
+        readonly=True
     )
 
     x_studio_responsibility = fields.Many2one(
@@ -189,8 +191,8 @@ class MrWizardLine(models.Model):
         string="Unit"
     )
 
-    x_studio_qty = fields.Float(string="Qty")
-    x_studio_qty_on_hand = fields.Float(string="Qty On Hand")
+    x_studio_qty = fields.Float(string="Qty",readonly=True)
+    x_studio_qty_on_hand = fields.Float(string="Qty On Hand",readonly=True)
     x_studio_required = fields.Char(string="Required")
     x_studio_rfq_qty = fields.Float(string="RFQ Qty")
 
@@ -221,22 +223,22 @@ class MrWizardLine(models.Model):
         currency_field='x_studio_currency_id'
     )
 
-    @api.constrains('x_studio_rfq_qty', 'x_studio_qty')
-    def _check_rfq_qty(self):
+    @api.onchange('x_studio_rfq_qty')
+    def _onchange_rfq_qty(self):
         for rec in self:
             rfq_qty = rec.x_studio_rfq_qty or 0
-            qty_on_hand =  rec.x_studio_qty or 0
+            qty_on_hand = rec.x_studio_qty or 0
             if rec.x_studio_rfq_qty > rec.x_studio_qty:
                 raise UserError(
                     f"RFQ Quantity ({rfq_qty}) cannot be greater than Qty On Hand ({qty_on_hand}) "
                     f"for product: {rec.x_studio_mr_name.display_name}"
                 )
 
-    @api.constrains('x_studio_total_rfq_qty')
+    @api.constrains('x_studio_rfq_qty')
     def _check_total_rfq_qty(self):
         for rec in self:
             # Only validate when record already exists (not during create default)
-            if rec.id and rec.x_studio_total_rfq_qty == 0.0:
+            if rec.id and rec.x_studio_rfq_qty == 0.0:
                 raise UserError(_(
                     "RFQ Quantity must be greater than 0."
                 ))

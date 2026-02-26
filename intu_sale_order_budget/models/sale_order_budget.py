@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 from odoo.exceptions import ValidationError
 
 # ---------------------------
@@ -12,7 +12,8 @@ class ProductTemplate(models.Model):
         string="Labour Cost",
         help="Labour cost associated with the product"
     )
-    
+
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -27,23 +28,30 @@ class SaleOrderLine(models.Model):
         string="ULC",
         compute="_compute_unit_labour_cost",
         store=True,
+        copy=True,
         readonly=False,  # optional
     )
 
     x_studio_material_cost = fields.Float(
         string="AMC",
         compute="_compute_material_cost",
-        store=True
+        copy=True,
+        store=True,
+        readonly=True
+
     )
     x_studio_labour_cost = fields.Float(
         string="ALC",
         compute="_compute_labour_cost",
-        store=True
+        store=True,
+        copy=True,
+        readonly=True
     )
     x_studio_total_cost = fields.Float(
         string="Total Cost",
         compute="_compute_total_cost",
         store=True
+        , copy=True,
     )
 
     @api.depends('product_template_id', 'product_uom_qty')
@@ -71,7 +79,14 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.x_studio_total_cost = (line.x_studio_material_cost or 0.0) + (line.x_studio_labour_cost or 0.0)
 
-
+    @api.constrains('x_studio_total_cost', 'price_subtotal')
+    def _check_total_cost_vs_subtotal(self):
+        for line in self:
+            if line.x_studio_total_cost > line.price_subtotal:
+                raise ValidationError(_(
+                    "⚠️ Budget Alert: Total Cost (Labour + Material) for '%s' "
+                    "is higher than the Sales Price!"
+                ) % line.product_id.name)
 # ---------------------------
 # Sale Order Add-ons
 # ---------------------------
@@ -141,3 +156,5 @@ class SaleOrder(models.Model):
         for order in self:
             if order.x_studio_amc_percentage > 100:
                 raise ValidationError("AMC Percentage cannot be greater than 100%")
+
+
