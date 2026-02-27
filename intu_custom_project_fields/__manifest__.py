@@ -3,7 +3,7 @@
     'version': '1.0',
     'category': 'Project',
     'summary': 'Migrating Studio fields to a custom module',
-    'depends': ['project', 'hr'],
+    'depends': ['hr_timesheet', 'project', 'hr'],
     'data': [
         'views/project_view.xml',
     ],

@@ -233,13 +233,12 @@ class MaterialRequest(models.Model):
                 'x_studio_vendor_1': vendor_id,
             }))
 
-        if not lines:
-            raise UserError(_(
-                "No pending quantities available.\n"
-                "All required quantities are already delivered "
-                "or covered by existing PO."
-            ))
-
+            if not lines:
+                raise UserError(_(
+                    "No pending quantities available.\n"
+                    "All required quantities are already delivered "
+                    "or covered by existing PO."
+                ))
         # -------------------------------------------------
         # Open Wizard WITHOUT create()
         # -------------------------------------------------

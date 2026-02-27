@@ -32,8 +32,6 @@ class Project(models.Model):
 
     x_studio_material_budget = fields.Float(
         string="Remaining Material Budget",
-        compute="_compute_material_budget",
-        copy=True,
         readonly=True,
     )
 
@@ -67,22 +65,25 @@ class Project(models.Model):
 
             # Logic: Subtracting both committed POs and stocked material costs
             # Using abs() if stocked_val is stored as a negative number
-            record.x_studio_po_remaining_budget = total_budget - purchase_amt - abs(stocked_val)
+            if purchase_amt or stocked_val:
+                record.x_studio_po_remaining_budget = total_budget - purchase_amt - abs(stocked_val)
+            else:
+                record.x_studio_po_remaining_budget = 0.0
 
 
-    @api.depends('x_studio_total_sales_budget', 'x_studio_delivery_price',
-                 'x_studio_purchase_budget', 'x_studio_delivery_purchase_price')
-    def _compute_material_budget(self):
-        for record in self:
+   # @api.depends('x_studio_total_sales_budget', 'x_studio_delivery_price',
+    #             'x_studio_purchase_budget', 'x_studio_delivery_purchase_price')
+    #def _compute_material_budget(self):
+            #    for record in self:
             # A1: Total Budget (e.g., 15,500)
-            A1 = record.x_studio_total_sales_budget or 0.0
+            #A1 = record.x_studio_total_sales_budget or 0.0
 
             # Actual Delivery Price (The cost incurred so far)
             # Using your requested logic: abs(Budget - Delivery Price)
-            delivery_price = record.x_studio_delivery_price or 0.0
+            #delivery_price = record.x_studio_delivery_price or 0.0
 
             # Final Calculation
-            record.x_studio_material_budget = abs(A1 - delivery_price)
+            #record.x_studio_material_budget = abs(A1 - delivery_price)
 
     @api.depends('x_studio_purchase_budget', 'x_studio_delivery_price')
     def _compute_delivery_purchase_price(self):

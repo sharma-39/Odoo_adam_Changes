@@ -53,26 +53,16 @@
                 <field name="code"/>
             </xpath>
 
-            <xpath expr="/form//button[@name='707']" position="attributes">
-    <attribute name="invisible">True</attribute>
-  </xpath>
-  <xpath expr="/form//button[@name='724']" position="attributes">
+            <xpath expr="/form//button" position="attributes">
     <attribute name="invisible">True</attribute>
   </xpath>
             <!-- Move project_id below code -->
             <xpath expr="//field[@name='code']" position="after">
                 <field name="project_id"/>
             </xpath>
-            <xpath expr="//button[@name='707']" position="attributes">
-            <attribute name="groups"></attribute>
-            <attribute name="invisible">0</attribute>
-        </xpath>
 
-        <xpath expr="//button[@name='724']" position="attributes">
-            <attribute name="invisible">0</attribute>
-        </xpath>
 
-            <xpath expr="/form//button[@name='724']" position="after">
+            <xpath expr="/form//button" position="after">
                  <button name="goto_mr" type="object" class="oe_stat_button" icon="fa-edit" invisible="x_studio_mr_count == 0">
                      <field name="x_studio_mr_count" widget="statinfo" string="Material Request" options="{'format': false}"/>
                  </button>
@@ -112,6 +102,11 @@
     <attribute name="force_save">1</attribute>
     <attribute name="readonly">x_status_bar == "approve"</attribute>
   </xpath>
+             <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_id']" position="attributes">
+
+    <attribute name="domain">["&amp;", "&amp;", ("type", "!=", "service"), ("categ_id.x_studio_bom_list", "!=", True), ("categ_id.x_studio_bom_list", "!=", True)]</attribute>
+  </xpath>
+
             <xpath expr="//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="after">
 
                 <field name="x_studio_mr_qty" readonly="1"/>

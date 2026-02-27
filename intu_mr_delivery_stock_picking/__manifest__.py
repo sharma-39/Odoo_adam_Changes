@@ -5,7 +5,7 @@
     "summary": "Adds custom fields to Stock Picking",
     "depends": ["stock"],
     "data": [
-        "",
+        "security/ir.model.access.csv",
     ],
     "installable": True,
     "application": False,
