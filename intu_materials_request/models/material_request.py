@@ -388,9 +388,9 @@ class MaterialRequestLine(models.Model):
 
     x_studio_qty = fields.Float(string="MR Qty")
     x_studio_qty_available = fields.Float(string="Qty Available")
-    x_studio_received_qty = fields.Float(string="Delivery Qty")
+    x_studio_received_qty = fields.Float(string="Delivery Qty",readonly=True)
 
-    x_studio_po_rfq_qty = fields.Float(string="PO Qty")
+    x_studio_po_rfq_qty = fields.Float(string="PO Qty",readonly=True)
     x_studio_received_po_qty = fields.Float(string="PO Received Qty")
     x_studio_waiting_po_qty = fields.Float(string="Waiting PO Qty")
 
@@ -407,3 +407,4 @@ class MaterialRequestLine(models.Model):
             else:
                 # Clear the field if no product is selected
                 record.x_studio_allowed_uom = [(5, 0, 0)]
+

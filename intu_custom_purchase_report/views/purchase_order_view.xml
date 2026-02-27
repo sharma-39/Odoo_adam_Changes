@@ -15,7 +15,7 @@
             string="Print"
             type="action"
             class="oe_highlight"
-            data-hotkey="y"/>
+            data-hotkey="y"  invisible="not x_studio_po_approve"/>
 </xpath>
         </field>
     </record>

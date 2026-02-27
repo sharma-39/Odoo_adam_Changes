@@ -4,6 +4,31 @@ from odoo import models, fields, api
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        # 1. Pre-process the values before creation
+        for vals in vals_list:
+            origin = vals.get('invoice_origin')
+            if origin and origin.startswith('PO'):
+                vals['payment_reference'] = origin
+                # If you want it blank on creation:
+                vals['narration'] = ""
+
+        # 2. Create the records
+        records = super(AccountMove, self).create(vals_list)
+        return records
+
+    def write(self, vals):
+        # 4. Handle updates to existing records
+        res = super(AccountMove, self).write(vals)
+
+        # If narration was updated, post to chatter
+        if 'narration' in vals:
+            for record in self:
+                record.message_post(body="Terms & Condition Updated Successfully")
+        return res
+
+
     x_studio_payment_received_amount = fields.Float(
         string="Payment Received Amount",
         compute="_compute_payment_received_amount",

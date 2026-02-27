@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_stock_picking_form_inherit_po_mr" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.po.mr</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Move picking_type_id after MR Request Number -->
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <field name="x_studio_mr_request_number"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
