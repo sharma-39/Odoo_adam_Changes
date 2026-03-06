@@ -69,17 +69,6 @@
     </record>
 
     <!-- Action -->
-    <record id="action_x_wizard_form" model="ir.actions.act_window">
-        <field name="name">Wizard Forms</field>
-        <field name="res_model">x.wizard.form</field>
-        <field name="view_mode">list,form</field>
-    </record>
 
-    <!-- Menu -->
-    <menuitem id="menu_x_wizard_form_root" name="Custom Wizard"/>
-    <menuitem id="menu_x_wizard_form"
-              name="Wizard Forms"
-              parent="menu_x_wizard_form_root"
-              action="action_x_wizard_form"/>
 
 </odoo>

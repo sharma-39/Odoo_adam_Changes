@@ -1,0 +1,19 @@
+<odoo>
+
+    <record id="mrp_bom_form_inherit_mr_flag" model="ir.ui.view">
+        <field name="name">mrp.bom.form.mr.flag</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+
+
+         <xpath expr="//button[@name='action_create_mr_bom']" position="attributes">
+    <attribute name="invisible">
+        not x_studio_approve_enable or x_create_mr_flag
+    </attribute>
+</xpath>
+
+        </field>
+    </record>
+
+</odoo>

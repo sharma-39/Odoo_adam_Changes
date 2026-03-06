@@ -9,13 +9,15 @@
                         string="Approve"
                         type="object"
                         class="btn-primary"
-                        invisible="not x_approved"/>
+                        invisible="not x_approved and state!='cancel'"/>
 		
      
             </header>
 			<xpath expr="//button[@name='action_confirm']" position="attributes">
             <attribute name="invisible">True</attribute>
         </xpath>
+
+
 
         <xpath expr="//button[@name='action_quotation_send']" position="attributes">
             <attribute name="invisible">not x_approved_widget_enable</attribute>

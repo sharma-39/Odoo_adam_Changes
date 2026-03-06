@@ -26,6 +26,7 @@ class XWizardForm(models.Model):
     @api.model
     def create(self, vals):
         record = super().create(vals)
+
         # ✅ Step 2: Get BoM
         product_tmpl_id = record.x_studio_bom_id.id
         bom = self.env['mrp.bom'].sudo().search([
@@ -37,6 +38,12 @@ class XWizardForm(models.Model):
                 f"No BoM found for Product Template: {record.x_studio_bom_id.display_name}"
             )
 
+        total_qty = sum(line.x_studio_mr_qty for line in record.x_wizard_form_line_ids)
+        # 4. If the sum of ALL lines is 0, then raise the error
+        if total_qty <= 0:
+            raise UserError(
+                "Action Required: At least one line must have an MR Quantity greater than 0."
+            )
         # ✅ Step 3: Update BoM Lines
         for line in record.x_wizard_form_line_ids:
             product_id = line.x_studio_many2one_field_4a2_1j8lb2oqp.id
@@ -70,11 +77,6 @@ class XWizardForm(models.Model):
                     'x_studio_unit': wiz_line.x_studio_unit.id if wiz_line.x_studio_unit else False,
                     'x_studio_remarks_1':wiz_line.x_studio_remarks,
                 }))
-        if not lines:
-            raise UserError(
-                "No pending quantities available.\n"
-                "All required quantities are already delivered or covered by existing PO."
-            )
 
         # ✅ Step 5: Create Custom Form
         if lines:

@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="action_data_cleanup_wizard" model="ir.actions.act_window">
+        <field name="name">Delete All Data</field>
+        <field name="res_model">data.cleanup.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+<menuitem
+    id="menu_delete_all_data"
+    name="Delete All Data"
+    parent="base.menu_administration"
+    action="action_data_cleanup_wizard"
+    sequence="100"
+    groups="base.group_no_one"/>
+</odoo>

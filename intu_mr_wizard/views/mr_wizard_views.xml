@@ -59,22 +59,6 @@
         </field>
     </record>
 
-    <!-- ACTION -->
-    <record id="action_x_mr_wizard" model="ir.actions.act_window">
-        <field name="name">MR Wizard</field>
-        <field name="res_model">x_mr_wizard</field>
-        <field name="view_mode">list,form</field>
-    </record>
 
-    <!-- MENU -->
-    <menuitem id="menu_x_mr_wizard_root"
-              name="MR Wizard"
-              sequence="10"/>
-
-    <menuitem id="menu_x_mr_wizard"
-              name="MR Wizard"
-              parent="menu_x_mr_wizard_root"
-              action="action_x_mr_wizard"
-              sequence="1"/>
 
 </odoo>

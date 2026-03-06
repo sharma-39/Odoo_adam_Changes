@@ -37,9 +37,3 @@ class XWizardFormLine(models.Model):
                         "Entered quantity exceeds the demand quantity. "
                         "Please adjust it accordingly."
                     )
-
-    @api.constrains('x_studio_mr_qty')
-    def _check_mr_qty(self):
-        for rec in self:
-            if rec.x_studio_mr_qty <= 0:
-                raise UserError("MR Qty must be greater than 0.")

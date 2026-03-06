@@ -72,6 +72,12 @@ class MrWizard(models.Model):
                 ('x_studio_mr_number', '=', record.x_studio_mr_number)
             ])
 
+            total_qty = sum(line.x_studio_rfq_qty for line in record.x_mr_wizard_line_ids_e1f04)
+            # 4. If the sum of ALL lines is 0, then raise the error
+            if total_qty <= 0:
+                raise UserError(
+                    "Action Required: At least one line must have an RFQ Quantity greater than 0."
+                )
             # -------------------------------------------------
             # 2️⃣ Update Waiting PO Qty
             # -------------------------------------------------
@@ -234,11 +240,6 @@ class MrWizardLine(models.Model):
                     f"for product: {rec.x_studio_mr_name.display_name}"
                 )
 
-    @api.constrains('x_studio_rfq_qty')
-    def _check_total_rfq_qty(self):
-        for rec in self:
-            # Only validate when record already exists (not during create default)
-            if rec.id and rec.x_studio_rfq_qty == 0.0:
-                raise UserError(_(
-                    "RFQ Quantity must be greater than 0."
-                ))
+
+
+
