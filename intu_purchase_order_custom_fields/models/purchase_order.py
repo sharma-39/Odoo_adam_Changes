@@ -114,13 +114,16 @@ class PurchaseOrder(models.Model):
             else:
                 record.x_studio_rfq_enable_selection = 'not_approved'
 
-    @api.depends('project_id', 'project_id.x_studio_po_remaining_budget')
+    @api.depends('project_id')
     def _compute_remaining_budget(self):
         for record in self:
             if record.project_id:
-                record.x_studio_budget = (
-                        record.project_id.x_studio_po_remaining_budget or 0.0
-                )
+                if record.project_id.x_studio_po_remaining_budget:
+                    record.x_studio_budget = (
+                            record.project_id.x_studio_po_remaining_budget or 0.0
+                    )
+                else:
+                    record.x_studio_budget = (record.project_id.x_studio_total_sales_budget or 0.0);
             else:
                 record.x_studio_budget = 0.0
 

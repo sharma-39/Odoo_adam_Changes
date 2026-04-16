@@ -58,17 +58,10 @@ class Project(models.Model):
     @api.depends('x_studio_total_sales_budget', 'x_studio_purchase_budget', 'x_studio_delivery_purchase_price')
     def _compute_remaining_budget(self):
         for record in self:
-            # Safely get values or default to 0.0
             total_budget = record.x_studio_total_sales_budget or 0.0
             purchase_amt = record.x_studio_purchase_budget or 0.0
             stocked_val = record.x_studio_delivery_purchase_price or 0.0
-
-            # Logic: Subtracting both committed POs and stocked material costs
-            # Using abs() if stocked_val is stored as a negative number
-            if purchase_amt or stocked_val:
-                record.x_studio_po_remaining_budget = total_budget - purchase_amt - abs(stocked_val)
-            else:
-                record.x_studio_po_remaining_budget = 0.0
+            record.x_studio_po_remaining_budget =  abs(total_budget - purchase_amt - abs(stocked_val))
 
 
    # @api.depends('x_studio_total_sales_budget', 'x_studio_delivery_price',
@@ -88,17 +81,13 @@ class Project(models.Model):
     @api.depends('x_studio_purchase_budget', 'x_studio_delivery_price')
     def _compute_delivery_purchase_price(self):
         for record in self:
-            # Calculate the raw difference
-            # Delivery Price (Actual) - Purchase Budget (Planned)
             delivery = record.x_studio_delivery_price or 0.0
             budget = record.x_studio_purchase_budget or 0.0
 
-            difference = delivery - budget
-
-            # If you want to include the 5% overhead mentioned in your comment:
-            # result = difference + (difference * 0.05)
-            # Otherwise, use the standard difference:
-            record.x_studio_delivery_purchase_price = difference
+            if delivery > 0:
+                record.x_studio_delivery_purchase_price = abs(delivery - budget)
+            else:
+                record.x_studio_delivery_purchase_price = 0.0
 
     @api.depends('task_count', 'closed_task_count')
     def _compute_project_progress(self):

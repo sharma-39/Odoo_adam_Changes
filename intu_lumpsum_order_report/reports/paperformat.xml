@@ -38,8 +38,8 @@
         <field name="report_type">qweb-pdf</field>
 
         <!-- Important: module_name.template_id -->
-        <field name="report_name">intu_lumpsum_order_report.job_quotation_report</field>
-        <field name="report_file">intu_lumpsum_order_report.job_quotation_report</field>
+        <field name="report_name">intu_lumpsum_order_report.lumpsum_quotation_report</field>
+        <field name="report_file">intu_lumpsum_order_report.lumpsum_quotation_report</field>
 
         <!-- Attach Paper Format -->
         <field name="paperformat_id"
